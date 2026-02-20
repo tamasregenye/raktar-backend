@@ -3,3 +3,4 @@
     - Szőke Márk
     - Kiss Bálint
     - Diószegi Bence
+    - Farkas Géza
