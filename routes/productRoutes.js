@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 
-
+//termekek lekérése
 router.get("/", function (keres, valasz) {
     valasz.header("Access-Control-Allow-Origin", "*");
     //1. sql szkript megírása
@@ -20,6 +20,7 @@ router.get("/", function (keres, valasz) {
 
 })
 
+//termék módosítása
 router.put('/:azonosito', function (keres, valasz) {
     const azonosito = keres.params.azonosito;
     const termek = keres.body;
@@ -45,5 +46,12 @@ router.put('/:azonosito', function (keres, valasz) {
         })
     })
 })
+
+//termék létrehozása
+//TODO
+
+
+//termék törlése
+//TODO
 
 module.exports = router;

@@ -2,7 +2,19 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 
+//partnerek lekérése
+//TODO
 
+
+//partner módosítása
+//TODO
+
+
+//partner létrehozása
+//TODO
+
+
+//partner törlése
 router.delete('/:azonosito', function (keres, valasz) {
     const azonosito = keres.params.azonosito;
     const sql = "DELETE FROM `partnerek` WHERE `id`=?";

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 
-
+//kategóriák lekérése
 router.get("/", function (keres, valasz) {
     const sql = "SELECT * FROM kategoriak";
     adatbazis.query(sql, function (hiba, eredmeny) {
@@ -13,6 +13,10 @@ router.get("/", function (keres, valasz) {
     })
 })
 
+//kategória módosítása
+//TODO
+
+//kategória létrehozása
 router.post('/', function (keres, valasz) {
     const kategoriaNev = keres.body.kategoriaNev;
     const sql = "INSERT INTO `kategoriak`(`nev`) VALUES (?)";
@@ -32,5 +36,8 @@ router.post('/', function (keres, valasz) {
         valasz.status(201).json({ "uzenet": "A kategória rögzítésre került!" });
     })
 })
+
+//kategória törlése
+//TODO
 
 module.exports = router;
