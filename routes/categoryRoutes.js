@@ -1,8 +1,9 @@
-const express = require("express")
-const router = express.Router()
-const adatbazis = require("../adatbazis")
+const express = require('express');
+const router = express.Router();
+const adatbazis = require('../adatbazis');
 
-router.get("/api/kategoriak", function (keres, valasz) {
+//kategóriák lekérése
+router.get("/", function (keres, valasz) {
     const sql = "SELECT * FROM kategoriak";
     adatbazis.query(sql, function (hiba, eredmeny) {
         if (hiba) {
@@ -12,7 +13,11 @@ router.get("/api/kategoriak", function (keres, valasz) {
     })
 })
 
-router.post('/api/kategoriak', function (keres, valasz) {
+//kategória módosítása
+//TODO
+
+//kategória létrehozása
+router.post('/', function (keres, valasz) {
     const kategoriaNev = keres.body.kategoriaNev;
     const sql = "INSERT INTO `kategoriak`(`nev`) VALUES (?)";
 
@@ -28,8 +33,11 @@ router.post('/api/kategoriak', function (keres, valasz) {
                 "valasz": hiba.message
             });
         }
-        valasz.status(201).json({ "uzenet": "A feladat rögzítésre került!" });
+        valasz.status(201).json({ "uzenet": "A kategória rögzítésre került!" });
     })
 })
 
-module.exports = router
+//kategória törlése
+//TODO
+
+module.exports = router;
