@@ -53,5 +53,19 @@ router.put('/:azonosito', function (keres, valasz) {
 
 //termék törlése
 //TODO
+router.delete('/:azonosito', function(keres, valasz){
+    const azonosito = keres.params.azonosito
+    const sql ="DELETE FROM `termekek` WHERE `id`=?"
+
+    adatbazis.query(sql,[azonosito],(hiba,eredmeny)=>{
+        if(hiba){
+            return valasz.status(500).json({"valasz": "A termék törlése sikertelen, szerverhiba történt."})
+        }
+        if(eredmeny.affectedRows===0){
+            return valasz.status(404).json({"valasz": "Nincs ilyen termék a rendszerben!"})
+        }
+        valasz.status(200).json()
+    })
+})
 
 module.exports = router;
