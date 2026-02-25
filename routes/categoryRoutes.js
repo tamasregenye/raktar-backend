@@ -18,15 +18,25 @@ router.put("/:id", function (keres, valasz) {
     const kategoria_id = keres.params.id
     const kategoriaNev = keres.body.kategoriaNev
 
+    if (!kategoriaNev) {
+        return valasz.status(400).json({
+            "valasz": "Nem adta meg a kategórianevet!"
+        })
+    }
+
     const sql = "UPDATE kategoriak SET nev = ? WHERE id = ?"
 
     adatbazis.query(sql, [kategoriaNev, kategoria_id], function (hiba, eredmeny) {
-        if (hiba) {
-            return valasz.status(500).json({
-                "valasz": hiba.message
+        if (eredmeny.affectedRows < 1) {
+            return valasz.status(404).json({
+                "valasz": "Nincs ilyen kategória a rendszerben!"
             })
         }
-        valasz.status(200).json({"uzenet": "A kategória módosítása megtörtént!"})
+        valasz.status(200).json({
+            "uzenet": "Sikeres frissítés",
+            "id": valasz.body.id,
+            "kategoriaNev": valasz.body.nev
+        })
     })
 })
 
@@ -52,18 +62,6 @@ router.post('/', function (keres, valasz) {
 })
 
 //kategória törlése
-router.delete(":id", function (keres, valasz) {
-    const kategoria_id = keres.params.id
-    const sql = "DELETE FROM kategoriak WHERE id = ?"
-
-    adatbazis.query(sql, [kategoria_id], function (hiba, eredmeny) {
-        if (hiba) {
-            return valasz.status(500).json({
-                "valasz": hiba.message
-            })
-        }
-        valasz.status(204).json({"uzenet": "A kategória törlése megtöténet!"})
-    })
-})
+//TODO
 
 module.exports = router;
