@@ -4,7 +4,19 @@ const adatbazis = require('../adatbazis');
 
 //partnerek lekérése
 //TODO
+router.get('/', (keres, valasz) => {
+    const sql = "SELECT * FROM `partnerek`";
 
+    //2. szkript futtatása, válasz összeállítása
+    adatbazis.query(sql, [], function (hiba, eredmeny) {
+        if (hiba) {
+            return valasz.status(500).json({
+                "valasz": hiba.message
+            })
+        }
+        valasz.status(200).json(eredmeny);
+    })
+})
 
 //partner módosítása
 //TODO
