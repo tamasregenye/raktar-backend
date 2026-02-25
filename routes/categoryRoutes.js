@@ -14,7 +14,21 @@ router.get("/", function (keres, valasz) {
 })
 
 //kategória módosítása
-//TODO
+router.put("/:id", function (keres, valasz) {
+    const kategoria_id = keres.params.id
+    const kategoriaNev = keres.body.kategoriaNev
+
+    const sql = "UPDATE kategoriak SET nev = ? WHERE id = ?"
+
+    adatbazis.query(sql, [kategoriaNev, kategoria_id], function (hiba, eredmeny) {
+        if (hiba) {
+            return valasz.status(500).json({
+                "valasz": hiba.message
+            })
+        }
+        valasz.status(200).json({"uzenet": "A kategória módosítása megtörtént!"})
+    })
+})
 
 //kategória létrehozása
 router.post('/', function (keres, valasz) {
@@ -38,6 +52,18 @@ router.post('/', function (keres, valasz) {
 })
 
 //kategória törlése
-//TODO
+router.delete(":id", function (keres, valasz) {
+    const kategoria_id = keres.params.id
+    const sql = "DELETE FROM kategoriak WHERE id = ?"
+
+    adatbazis.query(sql, [kategoria_id], function (hiba, eredmeny) {
+        if (hiba) {
+            return valasz.status(500).json({
+                "valasz": hiba.message
+            })
+        }
+        valasz.status(204).json({"uzenet": "A kategória törlése megtöténet!"})
+    })
+})
 
 module.exports = router;
