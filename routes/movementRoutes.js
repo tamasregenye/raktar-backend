@@ -2,6 +2,11 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 
+//mozgások lekérése
+//TODO
+
+
+//mozgások módosítása
 router.put("/:mozgasId", function (keres, valasz) {
     const mozgasId = keres.params.mozgasId;
     const termekId = keres.body.termekId;
@@ -37,5 +42,12 @@ router.put("/:mozgasId", function (keres, valasz) {
 
     });
 });
+
+//mozgások létrehozása
+//TODO
+
+
+//mozgások törlése
+//TODO
 
 module.exports = router;
