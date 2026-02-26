@@ -119,7 +119,7 @@ router.post("/", function (keres, valasz) {
         }
         valasz.status(201).json(
             {
-                "uzenet": "Mozgássikeresen rögzítve",
+                "uzenet": "Mozgás sikeresen rögzítve",
                 "id": eredmeny.insertId,
                 "termekId": termekId,
                 "partnerId": partnerId,
