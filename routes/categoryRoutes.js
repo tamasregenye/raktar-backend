@@ -23,6 +23,35 @@ router.get("/", function (keres, valasz) {
 //kategória módosítása
 //TODO
 
+
+/**
+ * @swagger
+ * /api/kategoriak:
+ *   post:
+ *     summary: "Új kategória létrehozása."
+ *     description: " Ez a végpont lehetővé teszi egy új kategória rögzítését az adatbázisban. A sikeres mentéshez kötelező megadni a kategória nevét a kérés törzsében."
+ *     tags:
+ *       - Kategóriák
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               kategoriaNev:
+ *                 type: string
+ *                 description: "Az új termékkategória neve."
+ *     responses:
+ *       201:
+ *         description: " A kategória sikeresen rögzítve lett"
+ *       400:
+ *         description: " Validációs hiba, ha a kategórianév nem lett elküldve a törzsben."
+ *       500:
+ *         description: " Szerver- vagy adatbázishiba"
+ */
+
+
 //kategória létrehozása
 router.post('/', function (keres, valasz) {
     const kategoriaNev = keres.body.kategoriaNev;
