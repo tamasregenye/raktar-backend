@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
+const { methodNotAllowed } = require('../utils/errors');
 
 router.get("/", function (keres, valasz) {
     const sql = "SELECT * FROM kategoriak";
@@ -32,5 +33,8 @@ router.post('/', function (keres, valasz) {
     })
 })
 
+router.all(["/"], (keres, valasz) => {
+    methodNotAllowed(keres, valasz);
+});
 
 module.exports = router; 
