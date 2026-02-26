@@ -10,6 +10,20 @@ const adatbazis = require('../adatbazis');
  */
 
 //kategóriák lekérése
+
+/**
+ * @swagger
+ * /api/kategoriak:
+ *   get:
+ *     summary: "Az összes kategóriák lekérése"
+ *     description: "Ez a végpont lehetővé teszi az összes a rendszerben (adatbázisban) tárolt összes termékkategória lekérését egy listában. A kéréshez nem szükséges paraméter vagy törzs."
+ *     tags: ["Kategóriák"]
+ *     responses:
+ *       200:
+ *         description: "Sikeres lekérdezés. JSON tömböt ad vissza, amely a kategóriák objektumait tartalmazza (az adatbázis sémája alapján: id mint integer, és nev mint string)."
+ *       500:
+ *         description: "Szerver- vagy adatbázishiba történik. JSON válasz: {'valasz': 'hibaüzenet szövege'}."
+ */ 
 router.get("/", function (keres, valasz) {
     const sql = "SELECT * FROM kategoriak";
     adatbazis.query(sql, function (hiba, eredmeny) {
