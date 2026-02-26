@@ -6,7 +6,7 @@ const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const partnerRoutes = require('./routes/partnerRoutes');
 const movementRoutes = require('./routes/movementRoutes')
-
+const swaggerRoutes = require('./routes/swaggerRoutes')
 //portszám 
 const port = 3000;
 
@@ -26,7 +26,8 @@ app.use(function (keres, valasz, next) {
 app.use('/api/termekek', productRoutes);
 app.use('/api/kategoriak', categoryRoutes);
 app.use('/api/partnerek', partnerRoutes);
-app.use('/api/mozgasok', movementRoutes)
+app.use('/api/mozgasok', movementRoutes);
+app.use('/api/docs', swaggerRoutes);
 
 //szerver elindítása a megfelelő porton
 app.listen(port, function () {
