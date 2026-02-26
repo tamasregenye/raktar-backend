@@ -1,6 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
+const { methodNotAllowed } = require('../utils/errors');
+
+/**
+ * @swagger
+ * tags:
+ *   name: Kategóriák
+ *   description: Kategóriák kezelése
+ */
 
 //kategóriák lekérése
 router.get("/", function (keres, valasz) {
@@ -35,6 +43,10 @@ router.post('/', function (keres, valasz) {
         }
         valasz.status(201).json({ "uzenet": "A kategória rögzítésre került!" });
     })
+})
+
+router.all(["/"], function(keres, valasz){
+    methodNotAllowed(keres, valasz);
 })
 
 //kategória törlése
