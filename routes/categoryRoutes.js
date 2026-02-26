@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
+const { methodNotAllowed } = require('../utils/errors');
 
 //kategóriák lekérése
 router.get("/", function (keres, valasz) {
@@ -37,7 +38,14 @@ router.post('/', function (keres, valasz) {
     })
 })
 
+
 //kategória törlése
 //TODO
+
+
+router.all(["/"], function(keres, valasz){
+    methodNotAllowed(keres, valasz);
+})
+
 
 module.exports = router;
