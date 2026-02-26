@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
+const { methodNotAllowed } = require('../utils/errors');
 
 /**
  * @swagger
@@ -85,6 +86,10 @@ router.post('/', function (keres, valasz) {
         }
         valasz.status(201).json({ "uzenet": "A kategória rögzítésre került!" });
     })
+})
+
+router.all(["/"], function(keres, valasz){
+    methodNotAllowed(keres, valasz);
 })
 
 //kategória törlése

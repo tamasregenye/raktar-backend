@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
+const { methodNotAllowed } = require('../utils/errors');
 
 
 /**
@@ -158,6 +159,10 @@ router.delete('/:azonosito', (keres, valasz) => {
             { "valasz": "Sikeres törlés!" }
         );
     })
+})
+
+router.all(["", "/:mozgasId"], function(keres, valasz){
+    methodNotAllowed(keres, valasz);
 })
 
 module.exports = router;
