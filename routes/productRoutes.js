@@ -10,6 +10,36 @@ const adatbazis = require('../adatbazis');
  */
 
 //termekek lekérése
+/**
+ * @swagger
+ * /api/termekek:
+ *   get:
+ *     summary: Az összes termék lekérése
+ *     description: Az adatbázisban található összes terméket adja vissza
+ *     tags: [Termékek]
+ *     responses:
+ *       200:
+ *         description: Sikeres lekérdezés
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   kategoriaAzonosito:
+ *                     type: integer
+ *                   termekNev:
+ *                     type: string
+ *                   ar:
+ *                     type: number
+ *                   keszleten:
+ *                     type: integer
+ *       500:
+ *         description: Szerver hiba
+ */
 router.get("/", function (keres, valasz) {
     valasz.header("Access-Control-Allow-Origin", "*");
     //1. sql szkript megírása
