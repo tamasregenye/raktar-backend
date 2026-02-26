@@ -13,7 +13,15 @@ const { methodNotAllowed } = require('../utils/errors');
 
 //mozgások lekérése
 //TODO
-
+router.get("/", (keres,valasz)=> {
+    const sql = "SELECT * FROM raktar_mozgasok"
+    adatbazis.query(sql, function (hiba, eredmeny){
+        if (hiba) {
+            return valasz.status(500).json({"valasz": hiba.message})
+        }
+        valasz.status(200).json(eredmeny)
+    })
+})
 
 //mozgások módosítása
 
@@ -87,8 +95,8 @@ router.put("/:mozgasId", function (keres, valasz) {
             );
         }
 
-        valasz.status(200).json( 
-            { "valasz": "Sikeres módosítás!" } 
+        valasz.status(200).json(
+            { "valasz": "Sikeres módosítás!" }
         );
 
     });
@@ -96,10 +104,66 @@ router.put("/:mozgasId", function (keres, valasz) {
 
 //mozgások létrehozása
 //TODO
+router.post("/", function (keres, valasz) {
+    const termekId = keres.body.termekId;
+    const partnerId = keres.body.partnerId;
+    const mennyiseg = keres.body.mennyiseg;
+    const datum = keres.body.datum;
 
+    if (!termekId || !partnerId || !mennyiseg || !datum) {
+        return valasz.status(400).json(
+            {
+                "valasz": "Hiányzó adatok!"
+            }
+        )
+    }
+
+    const sql = "INSERT INTO raktar_mozgasok (termek_id, partner_id, mennyiseg, datum) VALUES (?,?,?,?)";
+
+    adatbazis.query(sql, [termekId, partnerId, mennyiseg, datum], function (hiba, eredmeny) {
+        if (hiba) {
+            return valasz.status(500).json(
+                { "valasz": "Hiba a szerveren." }
+            );
+        }
+        valasz.status(201).json(
+            {
+                "uzenet": "Mozgás sikeresen rögzítve",
+                "id": eredmeny.insertId,
+                "termekId": termekId,
+                "partnerId": partnerId,
+                "mennyiseg": mennyiseg,
+                "datum": datum
+            }
+        )
+    })
+
+})
 
 //mozgások törlése
 //TODO
+router.delete('/:azonosito', (keres, valasz) => {
+    const mozgasId = keres.params.azonosito;
+    const sql = "DELETE FROM `raktar_mozgasok` WHERE id = ?";
+
+    adatbazis.query(sql, mozgasId, (hiba, eredmeny) => {
+        if (hiba) {
+            return valasz.status(500).json({ "valasz": "A mozgás törlése sikertelen, szerverhiba történt." });
+        }
+
+        if (eredmeny.affectedRows < 1) {
+            return valasz.status(404).json({ "valasz": "Nincs ilyen mozgás a rendszerben!" });
+        }
+
+        valasz.status(200).json(
+            { "valasz": "Sikeres törlés!" }
+        );
+    })
+})
+
+router.all(["", "/:mozgasId"], function(keres, valasz){
+    methodNotAllowed(keres, valasz);
+})
 
 router.all(["", "/:mozgasId"], function(keres, valasz){
     methodNotAllowed(keres, valasz);
