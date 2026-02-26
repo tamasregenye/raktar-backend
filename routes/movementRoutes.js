@@ -86,8 +86,8 @@ router.put("/:mozgasId", function (keres, valasz) {
             );
         }
 
-        valasz.status(200).json( 
-            { "valasz": "Sikeres módosítás!" } 
+        valasz.status(200).json(
+            { "valasz": "Sikeres módosítás!" }
         );
 
     });
@@ -99,5 +99,23 @@ router.put("/:mozgasId", function (keres, valasz) {
 
 //mozgások törlése
 //TODO
+router.delete('/:azonosito', (keres, valasz) => {
+    const mozgasId = keres.params.azonosito;
+    const sql = "DELETE FROM `raktar_mozgasok` WHERE id = ?";
+
+    adatbazis.query(sql, mozgasId, (hiba, eredmeny) => {
+        if (hiba) {
+            return valasz.status(500).json({ "valasz": "A mozgás törlése sikertelen, szerverhiba történt." });
+        }
+
+        if (eredmeny.affectedRows < 1) {
+            return valasz.status(404).json({ "valasz": "Nincs ilyen mozgás a rendszerben!" });
+        }
+
+        valasz.status(200).json(
+            { "valasz": "Sikeres törlés!" }
+        );
+    })
+})
 
 module.exports = router;
