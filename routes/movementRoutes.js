@@ -11,7 +11,7 @@ const adatbazis = require('../adatbazis');
 
 /**
  * @swagger
- * /api/mozgasok/:{mozgasId}:
+ * /api/mozgasok/{mozgasId}:
  *   put:
  *     summary: "raktármozgás módosítása"
  *     description: "ez a végpont teszi lehetővé egy meglévő raktár mozgás adatainka a módosítását"
