@@ -32,8 +32,8 @@ router.get("/", function (keres, valasz) {
  * @swagger
  * /api/termekek/{azonosito}:
  *   put:
- *     summary: "termék módosítása"
- *     description: "Ez a végpont teszi lehetővé egy meglévő módosítását."
+ *     summary: "Meglévő termék adatainak frissítése."
+ *     description: "Ez a végpont lehetővé teszi egy, az adatbázisban meglévő termék adatainak módosítását."
  *     tags: ["Termékek"]
  *     parameters:
  *       - in: path
@@ -57,7 +57,7 @@ router.get("/", function (keres, valasz) {
  *                 description: "A kapcsolódó termék ára"
  *               darabSzam:
  *                 type: integer
- *                 description: "A lacsolódó termékek darabszáma"
+ *                 description: "A kapcsolódó termékek darabszáma"
  *     responses:
  *       200:
  *         description: "Sikeres módosítás"
