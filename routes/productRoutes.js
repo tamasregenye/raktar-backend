@@ -15,7 +15,7 @@ const adatbazis = require('../adatbazis');
  * /api/termekek:
  *   get:
  *     summary: Az összes termék lekérése
- *     description: Az adatbázisban található összes terméket adja vissza
+ *     description: Ez a végpont lehetővé teszi az összes termék lekérdezését az adatbázisból.
  *     tags: [Termékek]
  *     responses:
  *       200:
