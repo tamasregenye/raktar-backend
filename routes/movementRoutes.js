@@ -95,7 +95,41 @@ router.put("/:mozgasId", function (keres, valasz) {
 
 //mozgások létrehozása
 //TODO
+router.post("/", function (keres, valasz) {
+    const termekId = keres.body.termekId;
+    const partnerId = keres.body.partnerId;
+    const mennyiseg = keres.body.mennyiseg;
+    const datum = keres.body.datum;
 
+    if (!termekId || !partnerId || !mennyiseg || !datum) {
+        return valasz.status(400).json(
+            {
+                "valasz": "Hiányzó adatok!"
+            }
+        )
+    }
+
+    const sql = "INSERT INTO raktar_mozgasok (termek_id, partner_id, mennyiseg, datum) VALUES (?,?,?,?)";
+
+    adatbazis.query(sql, [termekId, partnerId, mennyiseg, datum], function (hiba, eredmeny) {
+        if (hiba) {
+            return valasz.status(500).json(
+                { "valasz": "Hiba a szerveren." }
+            );
+        }
+        valasz.status(201).json(
+            {
+                "uzenet": "Mozgássikeresen rögzítve",
+                "id": eredmeny.insertId,
+                "termekId": termekId,
+                "partnerId": partnerId,
+                "mennyiseg": mennyiseg,
+                "datum": datum
+            }
+        )
+    })
+
+})
 
 //mozgások törlése
 //TODO
