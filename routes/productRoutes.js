@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
+const { methodNotAllowed } = require('../utils/errors');
 
 //termekek lekérése
 router.get("/", function (keres, valasz) {
@@ -66,6 +67,10 @@ router.delete('/:azonosito', function(keres, valasz){
         }
         valasz.status(200).json()
     })
+})
+
+router.all(["/"],function(keres, valasz){
+    methodNotAllowed(keres,valasz)
 })
 
 module.exports = router;
