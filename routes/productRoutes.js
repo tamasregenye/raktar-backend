@@ -27,6 +27,46 @@ router.get("/", function (keres, valasz) {
 
 })
 
+
+/**
+ * @swagger
+ * /api/termekek/{azonosito}:
+ *   put:
+ *     summary: "termék módosítása"
+ *     description: "Ez a végpont teszi lehetővé egy meglévő módosítását."
+ *     tags: ["Termékek"]
+ *     parameters:
+ *       - in: path
+ *         name: azonosito
+ *         required: true
+ *         type: number
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             properties:
+ *               kategoriaId:
+ *                 type: integer
+ *                 description: "A kapcsolódó termék kategóriájának azonosítója"
+ *               termekNev:
+ *                 type: string
+ *                 description: "A kapcsolódó termék neve"
+ *               ar:
+ *                 type: number
+ *                 description: "A kapcsolódó termék ára"
+ *               darabSzam:
+ *                 type: integer
+ *                 description: "A lacsolódó termékek darabszáma"
+ *     responses:
+ *       200:
+ *         description: "Sikeres módosítás"
+ *       400:
+ *         description: "Hibás kérés, a megadott azonosítóval nem létezik rekord vagy validációs hiba(negatív ár vagy darabszám)!"
+ *       500:
+ *         description: "Hiba történt a szerveren, nem sikerült módosítani a mozgást!"
+ */
+
 //termék módosítása
 router.put('/:azonosito', function (keres, valasz) {
     const azonosito = keres.params.azonosito;
