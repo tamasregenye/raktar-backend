@@ -2,6 +2,13 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 
+/**
+ * @swagger
+ * tags:
+ *   name: Kategóriák
+ *   description: Kategóriák kezelése
+ */
+
 //kategóriák lekérése
 router.get("/", function (keres, valasz) {
     const sql = "SELECT * FROM kategoriak";

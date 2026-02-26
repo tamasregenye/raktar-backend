@@ -2,6 +2,13 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 
+/**
+ * @swagger
+ * tags:
+ *   name: Partnerek
+ *   description: Partnerek kezelése
+ */
+
 //partnerek lekérése
 //TODO
 

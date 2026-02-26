@@ -2,6 +2,13 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 
+/**
+ * @swagger
+ * tags:
+ *   name: Termékek
+ *   description: Termékek kezelése
+ */
+
 //termekek lekérése
 router.get("/", function (keres, valasz) {
     valasz.header("Access-Control-Allow-Origin", "*");
