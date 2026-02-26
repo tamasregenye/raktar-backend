@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
+const { methodNotAllowed } = require('../utils/errors');
 
 /**
  * @swagger
@@ -94,5 +95,11 @@ router.put("/:mozgasId", function (keres, valasz) {
     });
 
 });
+
+
+
+router.all(["", "/:mozgasId"], function(keres, valasz){
+    methodNotAllowed(keres, valasz);
+})
 
 module.exports = router;
