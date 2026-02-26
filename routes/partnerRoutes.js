@@ -8,7 +8,42 @@ const adatbazis = require('../adatbazis');
 
 //partner módosítása
 //TODO
+router.put("/:azonosito", function (req, res) {
+    const azonosito = req.params.azonosito;
+    const nev = req.body.nev;
+    const varos = req.body.varos;
 
+    if (!nev || !varos) {
+        return res.status(400).json(
+            { "valasz": "Nincs ilyen partner a rendszerben!" }
+        )
+    }
+
+    const sql = "UPDATE `partnerek` SET `nev`=?,`varos`=? WHERE `id`=?";
+    const variables = [nev, varos, azonosito];
+
+    adatbazis.query(sql, variables, function (hiba, eredmeny) {
+        if (hiba) {
+            return res.status(500).json(
+                { "valasz": "Hiba a szerveren." }
+            );
+        }
+
+        if (eredmeny.affectedRows < 1) {
+            return res.status(404).json(
+                { "valasz": "Nincs ilyen partner a rendszerben!" }
+            );
+        }
+        res.status(200).json(
+            {
+                "uzenet": "Sikeres frissítés",
+                "id": azonosito,
+                "nev": nev,
+                "varos": varos
+            }
+        )
+    })
+})
 
 //partner létrehozása
 //TODO
@@ -33,5 +68,7 @@ router.delete('/:azonosito', function (keres, valasz) {
         valasz.status(204).json();
     })
 })
+
+
 
 module.exports = router;
