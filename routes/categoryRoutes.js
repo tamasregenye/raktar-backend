@@ -3,6 +3,9 @@ const router = express.Router();
 const adatbazis = require('../adatbazis');
 
 //kategóriák lekérése
+/**
+ * 
+ */
 router.get("/", function (keres, valasz) {
     const sql = "SELECT * FROM kategoriak";
     adatbazis.query(sql, function (hiba, eredmeny) {
