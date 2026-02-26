@@ -12,6 +12,32 @@ const adatbazis = require('../adatbazis');
 
 //partner létrehozása
 //TODO
+router.post('/', function (keres, valasz) {
+    const nev = keres.body.nev;
+    const varos = keres.body.varos;
+    const sql = "INSERT INTO partnerek (nev, varos) VALUES (?,?)";
+
+    if (!nev) {
+        return valasz.status(400).json(
+            {
+                "valasz": "Nem adta meg a partner nevét!"
+            }
+        )
+    }
+
+    adatbazis.query(sql, [nev, varos], function(hiba, eredmeny){
+        if (hiba) {
+            return valasz.status(500).json({ "valasz": hiba.message });
+        }
+        return valasz.status(201).json(
+            {
+                "uzenet": "Partner sikeresen rögzítve"
+            }
+        )
+    })
+
+
+})
 
 
 //partner törlése
