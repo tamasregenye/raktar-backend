@@ -2,6 +2,55 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 
+/**
+ * @swagger
+ * tags:
+ *   name: Mozgások
+ *   description: Raktrármozgások kezelése
+ */
+
+//mozgások módosítása
+/**
+ * @swagger
+ * /api/mozgasok/{mozgasId}:
+ *   put:
+ *     summary: "Raktármozgás módosítása"
+ *     description: "Ez a végpont teszi lehetővé egy meglévő raktármozgás adatainak módosítását"
+ *     tags: ["Mozgások"]
+ *     parameters:
+ *       - in: path
+ *         name: mozgasId
+ *         required: true
+ *         type: number
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: 
+ *             properties: 
+ *               termekId:
+ *                 type: number
+ *                 description: "A mozgáshoz kapcsolódó termék azonosítója"
+ *               partnerId:
+ *                 type: number
+ *                 description: "A mozgáshoz kapcsolódó partner azonosítója"
+ *               mennyiseg:
+ *                 type: number
+ *                 description: "A mozgás mennyisége - negatív és pozitív is lehet"
+ *               datum:
+ *                 type: string
+ *                 format: date-time
+ *                 description: "A mozgás dátuma és időpontja"
+ *     responses:
+ *       200:
+ *         description: "Sikeres módosítás"
+ *       400:
+ *         description: "Hibás kérés: hiányzó adatok!"
+ *       404:
+ *         description: "Hibás kérés: Megadott azonosítóval nem található rekord"
+ *       500:
+ *         description: "Szerverhiba"
+ */
 router.put('/:mozgasId', (keres, valasz) => {
     const mozgasId = keres.params.mozgasId;
     const termekId = keres.body.termekId;
