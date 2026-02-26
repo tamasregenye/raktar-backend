@@ -12,7 +12,7 @@ const adatbazis = require('../adatbazis');
 
 //mozgások lekérése
 //TODO
-router.get("/:mozgasId", (keres,valasz)=> {
+router.get("/", (keres,valasz)=> {
     const sql = "SELECT * FROM raktar_mozgasok"
     adatbazis.query(sql, function (hiba, eredmeny){
         if (hiba) {
