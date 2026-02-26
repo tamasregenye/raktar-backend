@@ -31,7 +31,7 @@ const adatbazis = require('../adatbazis');
  *      - in: path
  *        name: azonosito
  *        required: true
- *        description: "A törölni kívánt termék egyedi azonosítója."
+ *        description: "A törölni kívánt partner egyedi azonosítója."
  *     responses:
  *        204:
  *          description: "Sikeres törlés!"
@@ -42,12 +42,6 @@ const adatbazis = require('../adatbazis');
  *        500: 
  *          description: "Hiba üzenet!"
  */
-
-
-
-
-
-
 //partner törlése
 router.delete('/:azonosito', function (keres, valasz) {
     const azonosito = keres.params.azonosito;
