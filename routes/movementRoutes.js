@@ -12,7 +12,15 @@ const adatbazis = require('../adatbazis');
 
 //mozgások lekérése
 //TODO
-
+router.get("/:mozgasId", (keres,valasz)=> {
+    const sql = "SELECT * FROM raktar_mozgasok"
+    adatbazis.query(sql, function (hiba, eredmeny){
+        if (hiba) {
+            return valasz.status(500).json({"valasz": hiba.message})
+        }
+        valasz.status(200).json(eredmeny)
+    })
+})
 
 //mozgások módosítása
 
