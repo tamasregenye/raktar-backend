@@ -81,5 +81,7 @@ router.put("/:mozgasId", function (keres, valasz) {
     })
 })
 
+
+
 module.exports = router
 
