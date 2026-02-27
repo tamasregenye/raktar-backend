@@ -7,7 +7,8 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const partnerRoutes = require('./routes/partnerRoutes');
 const movementRoutes = require('./routes/movementRoutes');
 const swaggerRoutes = require('./routes/swaggerRoutes');
-const { notFoundHandler } = require('./middlewares/errorHandler');
+const { notFoundHandler, serverErrorHandler } = require('./middlewares/errorHandler');
+const cors = require('./middlewares/cors');
 
 //portszám 
 const port = 3000;
@@ -16,13 +17,7 @@ const port = 3000;
 const app = express();
 app.use(express.json());
 
-
-app.use(function (keres, valasz, next) {
-    valasz.header("Access-Control-Allow-Origin", "*");
-    valasz.header("Access-Control-Allow-Headers", "Content-Type")
-    valasz.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS");
-    next();
-})
+app.use(cors)
 
 //route-ok használata
 app.use('/api/termekek', productRoutes);
@@ -33,6 +28,9 @@ app.use('/api/docs', swaggerRoutes)
 
 //hiba kezelő köztes rétegek használata
 app.use(notFoundHandler);
+
+//hiba kezelő adatbázis hibára
+app.use(serverErrorHandler)
 
 //szerver elindítása a megfelelő porton
 app.listen(port, function () {

@@ -25,11 +25,11 @@ const { methodNotAllowed } = require('../utils/errors');
  *       500:
  *         description: "Szerver- vagy adatbázishiba történik. JSON válasz: {'valasz': 'hibaüzenet szövege'}."
  */ 
-router.get("/", function (keres, valasz) {
+router.get("/", function (keres, valasz, next) {
     const sql = "SELECT * FROM kategoriak";
     adatbazis.query(sql, function (hiba, eredmeny) {
         if (hiba) {
-            return valasz.status(500).json({ "valasz": hiba.message });
+            return next(hiba)
         }
         valasz.status(200).json(eredmeny);
     })
@@ -92,7 +92,7 @@ router.put("/:id", function (keres, valasz) {
 
 
 //kategória létrehozása
-router.post('/', function (keres, valasz) {
+router.post('/', function (keres, valasz, next) {
     const kategoriaNev = keres.body.kategoriaNev;
     const sql = "INSERT INTO `kategoriak`(`nev`) VALUES (?)";
 
@@ -104,9 +104,7 @@ router.post('/', function (keres, valasz) {
 
     adatbazis.query(sql, [kategoriaNev], function (hiba, eredmeny) {
         if (hiba) {
-            return valasz.status(500).json({
-                "valasz": hiba.message
-            });
+            return next(hiba)
         }
         valasz.status(201).json({ "uzenet": "A kategória rögzítésre került!" });
     })

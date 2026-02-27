@@ -7,4 +7,12 @@ function notFoundHandler(keres, valasz){
     );
 }
 
-module.exports = { notFoundHandler };
+function serverErrorHandler(hiba, keres, valasz, next) {
+    valasz.status(500).json({
+        "valasz": "Hiba a szerveren.",
+        //konkreét hiba üzenete fejlesztés miatt, a tényleges alkalmazásban nem használjuk
+        "magyarázat": hiba.message
+    })
+}
+
+module.exports = { notFoundHandler, serverErrorHandler };

@@ -2,21 +2,19 @@ const express = require("express")
 const router = express.Router()
 const adatbazis = require("../adatbazis")
 
-router.get("/", function (keres, valasz) {
+router.get("/", function (keres, valasz, next) {
     valasz.header("Access-Control-Allow-Origin", "*");
     const sql = "SELECT id, kategoria_id AS 'kategoriaAzonosito', nev AS 'termekNev', egysegar AS 'ar', keszlet_db AS 'keszleten' FROM `termekek`";
     adatbazis.query(sql, [], function (hiba, eredmeny) {
         if (hiba) {
-            return valasz.status(500).json({
-                "valasz": hiba.message
-            })
+            return next(hiba)
         }
         valasz.status(200).json(eredmeny);
     })
 
 })
 
-router.put('/:azonosito', function (keres, valasz) {
+router.put('/:azonosito', function (keres, valasz, next) {
     const azonosito = keres.params.azonosito;
     const termek = keres.body;
     const sql = "UPDATE `termekek` SET `kategoria_id`=?,`nev`=?,`egysegar`=?,`keszlet_db`=? WHERE `id`=?";
@@ -26,7 +24,7 @@ router.put('/:azonosito', function (keres, valasz) {
     }
     adatbazis.query(sql, [termek.kategoriaId, termek.termekNev, termek.ar, termek.darabSzam, azonosito], function (hiba, eredmeny) {
         if (hiba) {
-            return valasz.status(500).json({ "valasz": hiba.message })
+            return next(hiba)
         }
         if (eredmeny.affectedRows === 0) {
             return valasz.status(400).json({ "valasz": "Nincs ilyen termék a rendszerben!" });
