@@ -5,4 +5,4 @@ const methodNotAllowed = (keres, valasz) => {
     })
 }
 
-module.exports = { methodNotAllowed}
+module.exports = { methodNotAllowed }
