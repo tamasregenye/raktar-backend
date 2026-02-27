@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
+const { methodNotAllowed } = require('../utils/errors');
 
 //kategóriák lekérése
 router.get("/", function (keres, valasz) {
@@ -62,5 +63,9 @@ router.delete('/:azonosito', function (keres, valasz) {
         );
     })
 })
+
+router.all(["/"], function(keres, valasz){ //külön fájlban levő hibakezelő meghívása
+    methodNotAllowed(keres, valasz);
+});
 
 module.exports = router;

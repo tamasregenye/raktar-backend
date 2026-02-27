@@ -7,6 +7,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const partnerRoutes = require('./routes/partnerRoutes');
 const movementRoutes = require('./routes/movementRoutes');
 const swaggerRoutes = require('./routes/swaggerRoutes');
+const { notFoundHandler } = require('./midlewares/errorHandler');
 
 //portszám 
 const port = 3000;
@@ -29,6 +30,8 @@ app.use('/api/kategoriak', categoryRoutes);
 app.use('/api/partnerek', partnerRoutes);
 app.use('/api/mozgasok', movementRoutes);
 app.use('/api/docs', swaggerRoutes);
+
+app.use(notFoundHandler); // ha a fentiekben egyikben sem talál, akkor ezt a hibakezelőt hívja meg
 
 
 

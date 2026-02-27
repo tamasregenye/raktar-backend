@@ -1,6 +1,7 @@
 const express = require('express'); // csomag beinportálás
 const router = express.Router(); //csomagból a Router meghívás
 const adatbazis = require('../adatbazis'); //adatbazis.js elérése
+const { methodNotAllowed } = require('../utils/errors');
 
 /**
  * @swagger
@@ -83,4 +84,9 @@ router.put("/:mozgasId", function(keres, valasz) { //a teljes útvonal a kívül
         );
     });
 }); 
+
+router.all(["", "/:mozgasId"], function(keres, valasz){
+    methodNotAllowed(keres, valasz);
+});
+
 module.exports = router; //hivatkozás meghívhatóság => server.js-ben meg kell hívni
