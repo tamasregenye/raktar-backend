@@ -5,7 +5,11 @@ const express = require('express');
 const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const partnerRoutes = require('./routes/partnerRoutes');
+<<<<<<< HEAD
 const movementRoutes = require('./routes/movementRoutes')
+=======
+const movementRoutes = require('./routes/movementRoutes');
+>>>>>>> main
 const swaggerRoutes = require('./routes/swaggerRoutes');
 const { notFoundHandler } = require('./middlewares/errorHandler');
 
@@ -29,10 +33,17 @@ app.use('/api/termekek', productRoutes);
 app.use('/api/kategoriak', categoryRoutes);
 app.use('/api/partnerek', partnerRoutes);
 app.use('/api/mozgasok', movementRoutes)
+<<<<<<< HEAD
 app.use('/api/docs',swaggerRoutes)
 
 //hiba kezelő köztes rétegek használata
 app.use(notFoundHandler)
+=======
+app.use('/api/docs', swaggerRoutes)
+
+//hiba kezelő köztes rétegek használata
+app.use(notFoundHandler);
+>>>>>>> main
 
 //szerver elindítása a megfelelő porton
 app.listen(port, function () {
