@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 const { methodNotAllowed } = require('../utils/errors');
+const { serverErrorHandler } = require('../middlewares/errorHandler');
 
 
 /**
@@ -13,11 +14,11 @@ const { methodNotAllowed } = require('../utils/errors');
 
 //mozgások lekérése
 //TODO
-router.get("/", (keres,valasz)=> {
+router.get("/", (keres, valasz, next) => {
     const sql = "SELECT * FROM raktar_mozgasok"
-    adatbazis.query(sql, function (hiba, eredmeny){
+    adatbazis.query(sql, function (hiba, eredmeny) {
         if (hiba) {
-            return valasz.status(500).json({"valasz": hiba.message})
+            return next(hiba);
         }
         valasz.status(200).json(eredmeny)
     })
@@ -66,7 +67,7 @@ router.get("/", (keres,valasz)=> {
  *       500:
  *         description: "Hiba történt a szerveren, nem sikerült módosítani a mozgást!"
  */
-router.put("/:mozgasId", function (keres, valasz) {
+router.put("/:mozgasId", function (keres, valasz, next) {
     const mozgasId = keres.params.mozgasId;
     const termekId = keres.body.termekId;
     const partnerId = keres.body.partnerId;
@@ -84,9 +85,7 @@ router.put("/:mozgasId", function (keres, valasz) {
 
     adatbazis.query(sql, variables, function (hiba, eredmeny) {
         if (hiba) {
-            return valasz.status(500).json(
-                { "valasz": "Hiba a szerveren." }
-            );
+            return next(hiba);
         }
 
         if (eredmeny.affectedRows < 1) {
@@ -104,7 +103,7 @@ router.put("/:mozgasId", function (keres, valasz) {
 
 //mozgások létrehozása
 //TODO
-router.post("/", function (keres, valasz) {
+router.post("/", function (keres, valasz, next) {
     const termekId = keres.body.termekId;
     const partnerId = keres.body.partnerId;
     const mennyiseg = keres.body.mennyiseg;
@@ -122,9 +121,7 @@ router.post("/", function (keres, valasz) {
 
     adatbazis.query(sql, [termekId, partnerId, mennyiseg, datum], function (hiba, eredmeny) {
         if (hiba) {
-            return valasz.status(500).json(
-                { "valasz": "Hiba a szerveren." }
-            );
+            return next(hiba);
         }
         valasz.status(201).json(
             {
@@ -142,13 +139,13 @@ router.post("/", function (keres, valasz) {
 
 //mozgások törlése
 //TODO
-router.delete('/:azonosito', (keres, valasz) => {
+router.delete('/:azonosito', (keres, valasz, next) => {
     const mozgasId = keres.params.azonosito;
     const sql = "DELETE FROM `raktar_mozgasok` WHERE id = ?";
 
     adatbazis.query(sql, mozgasId, (hiba, eredmeny) => {
         if (hiba) {
-            return valasz.status(500).json({ "valasz": "A mozgás törlése sikertelen, szerverhiba történt." });
+            return next(hiba);
         }
 
         if (eredmeny.affectedRows < 1) {
@@ -161,7 +158,7 @@ router.delete('/:azonosito', (keres, valasz) => {
     })
 })
 
-router.all(["", "/:mozgasId"], function(keres, valasz){
+router.all(["", "/:mozgasId"], function (keres, valasz) {
     methodNotAllowed(keres, valasz);
 })
 

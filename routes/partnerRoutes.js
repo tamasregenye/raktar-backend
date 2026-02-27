@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 const { methodNotAllowed } = require('../utils/errors');
+const { serverErrorHandler } = require('../middlewares/errorHandler');
 
 /**
  * @swagger
@@ -44,7 +45,7 @@ const { methodNotAllowed } = require('../utils/errors');
  *          description: "Hiba üzenet!"
  */
 //partner törlése
-router.delete('/:azonosito', function (keres, valasz) {
+router.delete('/:azonosito', function (keres, valasz, next) {
     const azonosito = keres.params.azonosito;
     const sql = "DELETE FROM `partnerek` WHERE `id`=?";
 
@@ -54,7 +55,7 @@ router.delete('/:azonosito', function (keres, valasz) {
 
     adatbazis.query(sql, [azonosito], function (hiba, eredmeny) {
         if (hiba) {
-            return valasz.status(500).json({ "valasz": hiba.message });
+            return next(hiba);
         }
         if (eredmeny.affectedRows === 0) {
             return valasz.status(404).json({ "valasz": "Nincs ilyen azonosítójú alkalmazott!" });
