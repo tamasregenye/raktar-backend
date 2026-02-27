@@ -7,7 +7,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const partnerRoutes = require('./routes/partnerRoutes');
 const movementRoutes = require('./routes/movementRoutes');
 const swaggerRoutes = require('./routes/swaggerRoutes');
-const { notFoundHandler } = require('./middlewares/errorHandler');
+const { notFoundHandler, serverErrorHandler } = require('./middlewares/errorHandler');
 
 //portszám 
 const port = 3000;
@@ -33,6 +33,9 @@ app.use('/api/docs', swaggerRoutes)
 
 //hiba kezelő köztes rétegek használata
 app.use(notFoundHandler);
+
+//hiba kezelő köztes réteg adatbázis hibákra
+app.use(serverErrorHandler);
 
 //szerver elindítása a megfelelő porton
 app.listen(port, function () {
