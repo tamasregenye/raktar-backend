@@ -25,11 +25,11 @@ const { methodNotAllowed } = require('../utils/errors');
  *       500:
  *         description: "Szerver- vagy adatbázishiba történik. JSON válasz: {'valasz': 'hibaüzenet szövege'}."
  */ 
-router.get("/", function (keres, valasz) {
+router.get("/", function (keres, valasz, next) {
     const sql = "SELECT * FROM kategoriak";
     adatbazis.query(sql, function (hiba, eredmeny) {
         if (hiba) {
-            return valasz.status(500).json({ "valasz": hiba.message });
+            return next(hiba);
         }
         valasz.status(200).json(eredmeny);
     })
@@ -68,7 +68,7 @@ router.get("/", function (keres, valasz) {
 
 
 //kategória létrehozása
-router.post('/', function (keres, valasz) {
+router.post('/', function (keres, valasz, next) {
     const kategoriaNev = keres.body.kategoriaNev;
     const sql = "INSERT INTO `kategoriak`(`nev`) VALUES (?)";
 
@@ -80,15 +80,14 @@ router.post('/', function (keres, valasz) {
 
     adatbazis.query(sql, [kategoriaNev], function (hiba, eredmeny) {
         if (hiba) {
-            return valasz.status(500).json({
-                "valasz": hiba.message
-            });
+            return next(hiba);
         }
+        
         valasz.status(201).json({ "uzenet": "A kategória rögzítésre került!" });
     })
 })
 
-router.all(["/"], function(keres, valasz){
+router.all(["/"], function(keres, valasz, next){
     methodNotAllowed(keres, valasz);
 })
 
@@ -104,7 +103,7 @@ router.delete('/:azonosito', function (keres, valasz) {
 
     adatbazis.query(sql, [azonosito], function (hiba, eredmeny) {
         if (hiba) {
-            return valasz.status(500).json({ "valasz": hiba.message });
+            return next(hiba);
         }
         if (eredmeny.affectedRows === 0) {
             return valasz.status(404).json({ "valasz": "Nincs ilyen kategoria a rendszerben!" });
