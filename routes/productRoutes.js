@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 const { methodNotAllowed } = require('../utils/errors');
+<<<<<<< HEAD
+=======
 
 /**
  * @swagger
@@ -9,6 +11,7 @@ const { methodNotAllowed } = require('../utils/errors');
  *   name: Termékek
  *   description: Termékek kezelése
  */
+>>>>>>> origin/main
 
 //termekek lekérése
 /**
@@ -132,6 +135,10 @@ router.put('/:azonosito', function (keres, valasz) {
 //termék törlése
 //TODO
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> origin/main
 router.all(["/"], function(keres, valasz){
     methodNotAllowed(keres, valasz);
 })
