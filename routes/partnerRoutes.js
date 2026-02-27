@@ -3,6 +3,13 @@ const router = express.Router();
 const adatbazis = require('../adatbazis');
 const { methodNotAllowed } = require('../utils/errors');
 
+/**
+ * @swagger
+ * tags:
+ *   name: Partnerek
+ *   description: Partnerek kezelése
+ */
+
 //partnerek lekérése
 //TODO
 
@@ -14,9 +21,30 @@ const { methodNotAllowed } = require('../utils/errors');
 //partner létrehozása
 //TODO
 
-
+/**
+ * @swagger
+ * /api/partnerek/{azonosito}:
+ *   delete:
+ *     tags: ["Partnerek"]
+ *     summary: "Partner törlése azonosító alapján"
+ *     description: "Ez a végpont lehetővé teszi egy partner végleges törlését az adatbázisból az azonositója ID alapján. A sikeres művelet nem ad vissza adatot (204 No Content)"
+ *     parameters:
+ *      - in: path
+ *        name: azonosito
+ *        required: true
+ *        description: "A törölni kívánt partner egyedi azonosítója."
+ *     responses:
+ *        204:
+ *          description: "Sikeres törlés!"
+ *        400:
+ *          description: "Nem adott meg azonosítót!"
+ *        404:
+ *          description: "Nincs ilyen azonosítójú alkalmazott!"
+ *        500: 
+ *          description: "Hiba üzenet!"
+ */
 //partner törlése
-router.delete('/:azonosito', function (keres, valasz) {
+router.delete('/:azonosito', function (keres, valasz, next) {
     const azonosito = keres.params.azonosito;
     const sql = "DELETE FROM `partnerek` WHERE `id`=?";
 
@@ -26,7 +54,7 @@ router.delete('/:azonosito', function (keres, valasz) {
 
     adatbazis.query(sql, [azonosito], function (hiba, eredmeny) {
         if (hiba) {
-            return valasz.status(500).json({ "valasz": hiba.message });
+            return next(hiba);
         }
         if (eredmeny.affectedRows === 0) {
             return valasz.status(404).json({ "valasz": "Nincs ilyen azonosítójú alkalmazott!" });
@@ -35,7 +63,7 @@ router.delete('/:azonosito', function (keres, valasz) {
     })
 })
 
-router.all(["/", "/:azonosito"], function(keres, valasz){
+router.all(["/"], function(keres, valasz){
     methodNotAllowed(keres, valasz);
 })
 

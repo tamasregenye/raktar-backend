@@ -1,9 +1,4 @@
-/**
- * 
- * @param {Request} keres 
- * @param {*} valasz 
- */
-function notFoundHandler(keres, valasz) {
+function notFoundHandler(keres, valasz){
     valasz.status(404).json(
         {
             "hiba": "A kért végpont nem található",
@@ -12,4 +7,12 @@ function notFoundHandler(keres, valasz) {
     );
 }
 
-module.exports = { notFoundHandler };
+function serverErrorHandler(hiba, keres, valasz, next){
+    valasz.status(500).json({
+        "valasz": "Hiba a szerveren.",
+        // konkrét hiba üzenet, fejlesztés során használjuk, a végleges alkalmazásba ne kerüljön bele
+        "magyarazat": hiba.message
+    })
+}
+
+module.exports = { notFoundHandler, serverErrorHandler };

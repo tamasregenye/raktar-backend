@@ -10,4 +10,4 @@ router.all(["/"], function(keres, valasz){
     methodNotAllowed(keres, valasz);
 })
 
-module.exports = router;
+module.exports = router

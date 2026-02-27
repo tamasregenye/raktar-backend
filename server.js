@@ -7,7 +7,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const partnerRoutes = require('./routes/partnerRoutes');
 const movementRoutes = require('./routes/movementRoutes');
 const swaggerRoutes = require('./routes/swaggerRoutes');
-const { notFoundHandler } = require('./middlewares/errorHandler');
+const { notFoundHandler, serverErrorHandler } = require('./middlewares/errorHandler');
 
 //portszám 
 const port = 3000;
