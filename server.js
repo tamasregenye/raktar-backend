@@ -8,6 +8,10 @@ const partnerRoutes = require('./routes/partnerRoutes');
 const movementRoutes = require('./routes/movementRoutes');
 const swaggerRoutes = require('./routes/swaggerRoutes');
 const { notFoundHandler } = require('./middlewares/errorHandler');
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
 //portszám 
 const port = 3000;
 
@@ -28,12 +32,19 @@ app.use(function (keres, valasz, next) {
 app.use('/api/termekek', productRoutes);
 app.use('/api/kategoriak', categoryRoutes);
 app.use('/api/partnerek', partnerRoutes);
+<<<<<<< HEAD
 app.use('/api/mozgasok', movementRoutes);
+=======
+app.use('/api/mozgasok', movementRoutes)
+>>>>>>> origin/main
 app.use('/api/docs', swaggerRoutes)
 
 //hiba kezelő köztes rétegek használata
 app.use(notFoundHandler);
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
 
 //szerver elindítása a megfelelő porton
 app.listen(port, function () {

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * 
  * @param {Request} keres 
@@ -5,6 +6,8 @@
  */
 
 
+=======
+>>>>>>> origin/main
 function notFoundHandler(keres, valasz){
     valasz.status(404).json(
         {
@@ -14,6 +17,9 @@ function notFoundHandler(keres, valasz){
     );
 }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> origin/main
 module.exports = { notFoundHandler };
