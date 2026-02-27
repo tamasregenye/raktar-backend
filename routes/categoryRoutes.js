@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 const { methodNotAllowed } = require('../utils/errors');
-<<<<<<< HEAD
-=======
 
 /**
  * @swagger
@@ -11,7 +9,6 @@ const { methodNotAllowed } = require('../utils/errors');
  *   name: Kategóriák
  *   description: Kategóriák kezelése
  */
->>>>>>> origin/main
 
 //kategóriák lekérése
 

@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 const { methodNotAllowed } = require('../utils/errors');
-<<<<<<< HEAD
-=======
 
 /**
  * @swagger
@@ -11,7 +9,6 @@ const { methodNotAllowed } = require('../utils/errors');
  *   name: Termékek
  *   description: Termékek kezelése
  */
->>>>>>> origin/main
 
 //termekek lekérése
 /**
@@ -50,6 +47,7 @@ router.get("/", function (keres, valasz) {
     const sql = "SELECT id, kategoria_id AS 'kategoriaAzonosito', nev AS 'termekNev', egysegar AS 'ar', keszlet_db AS 'keszleten' FROM `termekek`";
 
     //2. szkript futtatása, válasz összeállítása
+
     adatbazis.query(sql, [], function (hiba, eredmeny) {
         if (hiba) {
             return valasz.status(500).json({
@@ -135,10 +133,6 @@ router.put('/:azonosito', function (keres, valasz) {
 //termék törlése
 //TODO
 
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/main
 router.all(["/"], function(keres, valasz){
     methodNotAllowed(keres, valasz);
 })
