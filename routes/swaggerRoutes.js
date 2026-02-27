@@ -8,6 +8,6 @@ router.get('/', swaggerUi.setup(swaggerDocument));
 
 router.all(["/"], function(keres, valasz){
     methodNotAllowed(keres, valasz);
-});
+})
 
-module.exports = router; //láthatóvá tételek a server.js-ben, ahol meg kell hívni a route-ot, hogy elérhető legyen a dokumentáció a szerveren
+module.exports = router
