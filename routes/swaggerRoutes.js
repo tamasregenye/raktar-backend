@@ -6,8 +6,8 @@ const { methodNotAllowed } = require('../utils/errors');
 router.use('/', swaggerUi.serve);
 router.get('/', swaggerUi.setup(swaggerDocument));
 
-router.all(["/"], (keres, valasz) => {
+router.all(["/"], function(keres, valasz){
     methodNotAllowed(keres, valasz);
-});
+})
 
-module.exports = router;
+module.exports = router
