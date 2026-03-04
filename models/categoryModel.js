@@ -2,7 +2,7 @@ const adatbazis = require('../adatbazis');
 
 const categoryModel = {
     selectAllCategories: (callback) => {
-         const sql = "SELECT * FROM kategoriak";
+        const sql = "SELECT * FROM kategoriak";
         adatbazis.query(sql, callback);
     },
 
@@ -10,6 +10,12 @@ const categoryModel = {
         const sql = "INSERT INTO `kategoriak`(`nev`) VALUES (?)";
         adatbazis.query(sql, [kategoriaNev], callback);
     }
+
+    //TODO put
+    
+
+    //TODO delete
+
 }
 
-module.exports = categoryModel;
+module.exports = categoryModel

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 const { methodNotAllowed } = require('../utils/errors');
+const { movementPutValidator: movementValidator } = require('../validators/movementValidator');
 
 
 /**
@@ -13,11 +14,11 @@ const { methodNotAllowed } = require('../utils/errors');
 
 //mozgások lekérése
 //TODO
-router.get("/", (keres,valasz, next)=> {
+router.get("/", (keres, valasz, next)=> {
     const sql = "SELECT * FROM raktar_mozgasok"
     adatbazis.query(sql, function (hiba, eredmeny){
         if (hiba) {
-            return next(hiba)
+            return next(hiba);
         }
         valasz.status(200).json(eredmeny)
     })
@@ -60,24 +61,18 @@ router.get("/", (keres,valasz, next)=> {
  *       200:
  *         description: "Sikeres módosítás"
  *       400:
- *         description: "Hibás kérés, nem adta meg a szükséges adatokat!"
+ *         description: "Hibás kérés, validációs hiba!"
  *       404:
  *         description: "Hibás kérés, a megadott azonosítóval nem létezik rekord!"
  *       500:
  *         description: "Hiba történt a szerveren, nem sikerült módosítani a mozgást!"
  */
-router.put("/:mozgasId", function (keres, valasz, next) {
+router.put("/:mozgasId", movementValidator, function (keres, valasz, next) {
     const mozgasId = keres.params.mozgasId;
     const termekId = keres.body.termekId;
     const partnerId = keres.body.partnerId;
     const mennyiseg = keres.body.mennyiseg;
     const datum = keres.body.datum;
-
-    if (!mozgasId || !termekId || !partnerId || !mennyiseg || !datum) {
-        return valasz.status(400).json(
-            { "valasz": "Nem adta meg a szükséges adatokat!" }
-        );
-    }
 
     const sql = "UPDATE `raktar_mozgasok` SET `termek_id`=?,`partner_id`=?,`mennyiseg`=?,`datum`=? WHERE `id`=?";
     const variables = [termekId, partnerId, mennyiseg, datum, mozgasId];
@@ -120,7 +115,7 @@ router.post("/", function (keres, valasz, next) {
 
     adatbazis.query(sql, [termekId, partnerId, mennyiseg, datum], function (hiba, eredmeny) {
         if (hiba) {
-            return next(hiba)
+            return next(hiba);
         }
         valasz.status(201).json(
             {
