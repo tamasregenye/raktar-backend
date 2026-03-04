@@ -85,7 +85,9 @@ const productController = {
      *       200:
      *         description: "Sikeres módosítás"
      *       400:
-     *         description: "Hibás kérés, a megadott azonosítóval nem létezik rekord vagy validációs hiba(negatív ár vagy darabszám)!"
+     *         description: "Hibás kérés, validációs hiba!"
+     *       404:
+     *         description: "Hibás kérés, a megadott azonosítóval nem létezik rekord!"
      *       500:
      *         description: "Hiba történt a szerveren, nem sikerült módosítani a mozgást!"
      */
@@ -105,7 +107,7 @@ const productController = {
                 return next(hiba);
             }
             if (eredmeny.affectedRows === 0) {
-                return valasz.status(400).json({ "valasz": "Nincs ilyen termék a rendszerben!" });
+                return valasz.status(404).json({ "valasz": "Nincs ilyen termék a rendszerben!" });
             }
             valasz.status(200).json({
                 "uzenet": "Sikeres frissítés",
