@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 const { methodNotAllowed } = require('../utils/errors');
-const { serverErrorHandler } = require('../middlewares/errorHandler');
 const categoryController = require('../controllers/categoryController');
 
-router.get("/", categoryController.getAllCategories);
+//kategóriák lekérése
+
+router.get("/", categoryController.getAllCategories)
 
 //kategória módosítása
 //TODO

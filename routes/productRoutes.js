@@ -49,7 +49,7 @@ router.get("/", function (keres, valasz, next) {
     //2. szkript futtatása, válasz összeállítása
     adatbazis.query(sql, [], function (hiba, eredmeny) {
         if (hiba) {
-            return next(hiba);
+            return next(valasz);
         }
         valasz.status(200).json(eredmeny);
     })

@@ -7,10 +7,10 @@ function notFoundHandler(keres, valasz) {
     );
 }
 
-function serverErrorHandler(hiba, keres, valasz, next) {
+function serverErrorHandler(hiba, keres, valasz, next){
     valasz.status(500).json({
         "valasz": "Hiba a szerveren.",
-        // a végleges alkalmazásban ne szerpeljen a konkrét hibaüzenet biztonsági okokból
+        // konkrét hiba üzenet, fejlesztés során használjuk, a végleges alkalmazásba ne kerüljön bele
         "magyarazat": hiba.message
     })
 }

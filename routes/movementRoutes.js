@@ -14,7 +14,7 @@ const { serverErrorHandler } = require('../middlewares/errorHandler');
 
 //mozgások lekérése
 //TODO
-router.get("/", (keres, valasz, next) => {
+router.get("/", (keres, valasz, next)=> {
     const sql = "SELECT * FROM raktar_mozgasok"
     adatbazis.query(sql, function (hiba, eredmeny) {
         if (hiba) {

@@ -8,9 +8,7 @@ const categoryModel = require('../models/categoryModel');
  */
 
 const categoryController = {
-    //GET logika    
-    
-    //kategóriák lekérése
+    //GET logika
     /**
      * @swagger
      * /api/kategoriak:
@@ -24,17 +22,16 @@ const categoryController = {
      *       500:
      *         description: "Szerver- vagy adatbázishiba történik. JSON válasz: {'valasz': 'hibaüzenet szövege'}."
      */
-
     getAllCategories: (keres, valasz, next) => {
         categoryModel.selectAllCategories((hiba, eredmeny) => {
             if (hiba) {
                 return next(hiba);
             }
             valasz.status(200).json(eredmeny);
-        });
+        })
     },
 
-    //POST logika    
+    //POST logika
     /**
      * @swagger
      * /api/kategoriak:
@@ -80,15 +77,11 @@ const categoryController = {
         })
     }
 
-
     //PUT logika
     //TODO
 
     //DELETE logika
     //TODO
-
-    //
-
 }
 
-module.exports = categoryController;
+module.exports = categoryController
