@@ -49,7 +49,7 @@ router.get("/", function (keres, valasz, next) {
     //2. szkript futtatása, válasz összeállítása
     adatbazis.query(sql, [], function (hiba, eredmeny) {
         if (hiba) {
-            return next(hiba)
+            return next(valasz);
         }
         valasz.status(200).json(eredmeny);
     })
@@ -107,7 +107,7 @@ router.put('/:azonosito', function (keres, valasz, next) {
     }
     adatbazis.query(sql, [termek.kategoriaId, termek.termekNev, termek.ar, termek.darabSzam, azonosito], function (hiba, eredmeny) {
         if (hiba) {
-            return next(hiba)
+            return next(hiba);
         }
         if (eredmeny.affectedRows === 0) {
             return valasz.status(400).json({ "valasz": "Nincs ilyen termék a rendszerben!" });

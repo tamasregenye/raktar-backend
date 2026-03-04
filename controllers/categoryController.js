@@ -1,12 +1,14 @@
-const categoryModel = require('../models/categoryModel')
-    /**
-     * @swagger
-     * tags:
-     *   name: Kategóriák
-     *   description: Kategóriák kezelése
-     */
+const categoryModel = require('../models/categoryModel');
+
+/**
+ * @swagger
+ * tags:
+ *   name: Kategóriák
+ *   description: Kategóriák kezelése
+ */
+
 const categoryController = {
-    //GET logika    
+    //GET logika
     /**
      * @swagger
      * /api/kategoriak:
@@ -19,18 +21,17 @@ const categoryController = {
      *         description: "Sikeres lekérdezés. JSON tömböt ad vissza, amely a kategóriák objektumait tartalmazza (az adatbázis sémája alapján: id mint integer, és nev mint string)."
      *       500:
      *         description: "Szerver- vagy adatbázishiba történik. JSON válasz: {'valasz': 'hibaüzenet szövege'}."
-     */ 
-
+     */
     getAllCategories: (keres, valasz, next) => {
         categoryModel.selectAllCategories((hiba, eredmeny) => {
             if (hiba) {
-                return next(hiba)
+                return next(hiba);
             }
-            valasz.status(200).json(eredmeny)
+            valasz.status(200).json(eredmeny);
         })
     },
-    //POST logika
 
+    //POST logika
     /**
      * @swagger
      * /api/kategoriak:
@@ -57,9 +58,8 @@ const categoryController = {
      *       500:
      *         description: " Szerver- vagy adatbázishiba"
      */
-
     postCategory: (keres, valasz, next) => {
-        //adat kinyerése a kérés törzséből
+        //adatok kinyerése a kérés törzséből
         const kategoriaNev = keres.body.kategoriaNev;
 
         //adatok validálása
@@ -71,7 +71,7 @@ const categoryController = {
 
         categoryModel.insertCategory(kategoriaNev, (hiba, eredmeny) => {
             if (hiba) {
-                return next(hiba)
+                return next(hiba);
             }
             valasz.status(201).json({ "uzenet": "A kategória rögzítésre került!" });
         })

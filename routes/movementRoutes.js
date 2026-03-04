@@ -12,11 +12,11 @@ const { methodNotAllowed } = require('../utils/errors');
 
 //mozgások lekérése
 //TODO
-router.get("/", (keres,valasz, next)=> {
+router.get("/", (keres, valasz, next)=> {
     const sql = "SELECT * FROM raktar_mozgasok"
     adatbazis.query(sql, function (hiba, eredmeny){
         if (hiba) {
-            return next(hiba)
+            return next(hiba);
         }
         valasz.status(200).json(eredmeny)
     })
@@ -83,7 +83,7 @@ router.put("/:mozgasId", function (keres, valasz, next) {
 
     adatbazis.query(sql, variables, function (hiba, eredmeny) {
         if (hiba) {
-            return next(hiba)
+            return next(hiba);
         }
 
         if (eredmeny.affectedRows < 1) {
@@ -119,7 +119,7 @@ router.post("/", function (keres, valasz, next) {
 
     adatbazis.query(sql, [termekId, partnerId, mennyiseg, datum], function (hiba, eredmeny) {
         if (hiba) {
-            return next(hiba)
+            return next(hiba);
         }
         valasz.status(201).json(
             {
@@ -143,7 +143,7 @@ router.delete('/:azonosito', (keres, valasz, next) => {
 
     adatbazis.query(sql, mozgasId, (hiba, eredmeny) => {
         if (hiba) {
-            return next(hiba)
+            return next(hiba);
         }
 
         if (eredmeny.affectedRows < 1) {

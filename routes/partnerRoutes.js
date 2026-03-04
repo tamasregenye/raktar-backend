@@ -54,7 +54,7 @@ router.delete('/:azonosito', function (keres, valasz, next) {
 
     adatbazis.query(sql, [azonosito], function (hiba, eredmeny) {
         if (hiba) {
-            return next(hiba)
+            return next(hiba);
         }
         if (eredmeny.affectedRows === 0) {
             return valasz.status(404).json({ "valasz": "Nincs ilyen azonosítójú alkalmazott!" });

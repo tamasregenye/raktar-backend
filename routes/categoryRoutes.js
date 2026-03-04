@@ -5,17 +5,17 @@ const { methodNotAllowed } = require('../utils/errors');
 const categoryController = require('../controllers/categoryController');
 
 //kategóriák lekérése
+
 router.get("/", categoryController.getAllCategories)
 
 //kategória módosítása
 //TODO
 
-//kategória létrehozása
-router.post('/', categoryController.postCategory)
 
-router.all(["/"], function(keres, valasz){
-    methodNotAllowed(keres, valasz);
-})
+//kategória létrehozása
+router.post('/', categoryController.postCategory);
+
+router.all(["/"], methodNotAllowed);
 
 //kategória törlése
 //TODO
