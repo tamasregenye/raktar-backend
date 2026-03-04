@@ -3,16 +3,27 @@ const { param, validationResult, body } = require("express-validator");
 const movementPutValidator = [
     //ellenőrzés, hibaüzenetek összeállítása
     param('mozgasId').isInt({ min: 1 }).withMessage('A mozgás ID-nak pozitív egész számnak kell lennie!'),
+<<<<<<< HEAD
     
     body('termekId').isInt({min: 1}).withMessage('A termék ID-nak pozitív egész számnak kell lennie!'),
     
     body('partnerId').isInt({min: 1}).withMessage('A partner ID-nak pozitív egész számnak kell lennie!'),
+=======
+
+    body('termekId').isInt({ min: 1 }).withMessage('A termék ID-nak pozitív egész számnak kell lennie!'),
+
+    body('partnerId').isInt({ min: 1 }).withMessage('A partner ID-nak pozitív egész számnak kell lennie!'),
+>>>>>>> origin/main
 
     body('mennyiseg').isInt().withMessage('A mennyiségnek egész számnak kell lennie!'),
 
     body('datum').isISO8601().withMessage("A dátumnak a következő formátumban kell lennie: ÉÉÉÉ-HH-NN!"),
 
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/main
     (keres, valasz, next) => {
         const errors = validationResult(keres);
 
