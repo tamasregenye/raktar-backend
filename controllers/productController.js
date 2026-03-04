@@ -96,11 +96,6 @@ const productController = {
         const azonosito = keres.params.azonosito;
         const termek = keres.body;
 
-        //validáció
-        if (termek.ar < 0 || termek.darabSzam < 0) {
-            return valasz.status(400).json({ "valasz": "Az ár és a darabszám nem lehet negatív érték!" })
-        }
-
         //adatbázisműveletre vonatkozó metódus meghívása
         productModel.updateProduct(azonosito, termek, (hiba, eredmeny) => {
             if (hiba) {

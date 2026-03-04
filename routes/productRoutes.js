@@ -3,12 +3,13 @@ const router = express.Router();
 const adatbazis = require('../adatbazis');
 const { methodNotAllowed } = require('../utils/errors');
 const productController = require('../controllers/productController');
+const { productPutValidator } = require('../validators/productValidator');
 
 //termékek lekérdezése
 router.get("/", productController.getAllProducts)
 
 //termék módosítása
-router.put('/:azonosito', productController.putProduct)
+router.put('/:azonosito', productPutValidator, productController.putProduct)
 
 //termék létrehozása
 //TODO
