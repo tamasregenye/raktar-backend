@@ -1,56 +1,72 @@
 const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
+const { methodNotAllowed } = require('../utils/errors');
+
 
 /**
  * @swagger
- * tags: 
+ * tags:
  *   name: Mozgások
  *   description: Raktár mozgások kezelése
  */
+
+//mozgások lekérése
+//TODO
+router.get("/", (keres, valasz, next)=> {
+    const sql = "SELECT * FROM raktar_mozgasok"
+    adatbazis.query(sql, function (hiba, eredmeny){
+        if (hiba) {
+            return next(hiba);
+        }
+        valasz.status(200).json(eredmeny)
+    })
+})
+
+//mozgások módosítása
 
 /**
  * @swagger
  * /api/mozgasok/{mozgasId}:
  *   put:
- *     summary: "raktármozgás módosítása"
- *     description: "ez a végpont teszi lehetővé egy meglévő raktár mozgás adatainka a módosítását"
+ *     summary: "Raktár mozgás módosítása"
+ *     description: "Ez a végpont teszi lehetővé egy meglévő raktár mozgás adatainak módosítását az adatbázisban."
  *     tags: ["Mozgások"]
- *     parameters: 
+ *     parameters:
  *       - in: path
  *         name: mozgasId
  *         required: true
  *         type: number
- *     requestBody: 
+ *     requestBody:
  *       required: true
  *       content:
  *         application/json:
- *           schema: 
+ *           schema:
  *             properties:
- *               termekId: 
+ *               termekId:
  *                 type: number
  *                 description: "A mozgáshoz kapcsolódó termék azonosítója"
- *               partnerId: 
+ *               partnerId:
  *                 type: number
  *                 description: "A mozgáshoz kapcsolódó partner azonosítója"
- *               mennyiseg: 
+ *               mennyiseg:
  *                 type: number
- *                 description: "A mozgáshoz mennyisége, lehet pozití és negatív is"
- *               datum: 
+ *                 description: "Mozgás mennyisége - negatív vagy pozitív érték is lehet"
+ *               datum:
  *                 type: string
  *                 format: date-time
- *                 description: "A mozgás dátuma"
- *     responses: 
+ *                 description: "A mozgás dátuma és időpontja"
+ *     responses:
  *       200:
  *         description: "Sikeres módosítás"
  *       400:
- *         description: "Hibás kérés, nem adta meg a szükséges adatokat"
+ *         description: "Hibás kérés, nem adta meg a szükséges adatokat!"
  *       404:
- *         description: "Hibás kérés, a megadott azonosítóval nem létezik rekord"  
+ *         description: "Hibás kérés, a megadott azonosítóval nem létezik rekord!"
  *       500:
- *         description: "Hiba történt a szereveren, nem sikerült módosítani a mozgást" 
+ *         description: "Hiba történt a szerveren, nem sikerült módosítani a mozgást!"
  */
-router.put("/:mozgasId", function (keres, valasz) {
+router.put("/:mozgasId", function (keres, valasz, next) {
     const mozgasId = keres.params.mozgasId;
     const termekId = keres.body.termekId;
     const partnerId = keres.body.partnerId;
@@ -58,9 +74,9 @@ router.put("/:mozgasId", function (keres, valasz) {
     const datum = keres.body.datum;
 
     if (!mozgasId || !termekId || !partnerId || !mennyiseg || !datum) {
-        return valasz.status(400).json({
-            "valasz": "Nem adta meg a szükséges adatokat!"
-        });
+        return valasz.status(400).json(
+            { "valasz": "Nem adta meg a szükséges adatokat!" }
+        );
     }
 
     const sql = "UPDATE `raktar_mozgasok` SET `termek_id`=?,`partner_id`=?,`mennyiseg`=?,`datum`=? WHERE `id`=?";
@@ -68,20 +84,81 @@ router.put("/:mozgasId", function (keres, valasz) {
 
     adatbazis.query(sql, variables, function (hiba, eredmeny) {
         if (hiba) {
-            return valasz.status(500).json({
-                "valasz": "Hiba a szerveren."
-            })
+            return next(hiba);
         }
+
         if (eredmeny.affectedRows < 1) {
-            return valasz.status(404).json({
-                "valasz": "Nincs ilyen mozgás!"
-            });
+            return valasz.status(404).json(
+                { "valasz": "Nincs ilyen mozgás!" }
+            );
         }
-        valasz.status(200).json({
-            "valasz": "Sikeres módosítás"
-        })
-    })
+
+        valasz.status(200).json(
+            { "valasz": "Sikeres módosítás!" }
+        );
+
+    });
 });
 
+//mozgások létrehozása
+//TODO
+router.post("/", function (keres, valasz, next) {
+    const termekId = keres.body.termekId;
+    const partnerId = keres.body.partnerId;
+    const mennyiseg = keres.body.mennyiseg;
+    const datum = keres.body.datum;
+
+    if (!termekId || !partnerId || !mennyiseg || !datum) {
+        return valasz.status(400).json(
+            {
+                "valasz": "Hiányzó adatok!"
+            }
+        )
+    }
+
+    const sql = "INSERT INTO raktar_mozgasok (termek_id, partner_id, mennyiseg, datum) VALUES (?,?,?,?)";
+
+    adatbazis.query(sql, [termekId, partnerId, mennyiseg, datum], function (hiba, eredmeny) {
+        if (hiba) {
+            return next(hiba);
+        }
+        valasz.status(201).json(
+            {
+                "uzenet": "Mozgás sikeresen rögzítve",
+                "id": eredmeny.insertId,
+                "termekId": termekId,
+                "partnerId": partnerId,
+                "mennyiseg": mennyiseg,
+                "datum": datum
+            }
+        )
+    })
+
+})
+
+//mozgások törlése
+//TODO
+router.delete('/:azonosito', (keres, valasz, next) => {
+    const mozgasId = keres.params.azonosito;
+    const sql = "DELETE FROM `raktar_mozgasok` WHERE id = ?";
+
+    adatbazis.query(sql, mozgasId, (hiba, eredmeny) => {
+        if (hiba) {
+            return next(hiba);
+        }
+
+        if (eredmeny.affectedRows < 1) {
+            return valasz.status(404).json({ "valasz": "Nincs ilyen mozgás a rendszerben!" });
+        }
+
+        valasz.status(200).json(
+            { "valasz": "Sikeres törlés!" }
+        );
+    })
+})
+
+router.all(["", "/:mozgasId"], function(keres, valasz){
+    methodNotAllowed(keres, valasz);
+})
 
 module.exports = router;
