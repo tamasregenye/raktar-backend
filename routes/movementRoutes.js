@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 const { methodNotAllowed } = require('../utils/errors');
-const { movementPutValidator: movementValidator } = require('../validators/movementValidator');
+const { movementPutValidator } = require('../validators/movementValidator');
 
 
 /**
@@ -67,7 +67,7 @@ router.get("/", (keres, valasz, next)=> {
  *       500:
  *         description: "Hiba történt a szerveren, nem sikerült módosítani a mozgást!"
  */
-router.put("/:mozgasId", movementValidator, function (keres, valasz, next) {
+router.put("/:mozgasId", movementPutValidator, function (keres, valasz, next) {
     const mozgasId = keres.params.mozgasId;
     const termekId = keres.body.termekId;
     const partnerId = keres.body.partnerId;
