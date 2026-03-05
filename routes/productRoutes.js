@@ -5,11 +5,7 @@ const { methodNotAllowed } = require('../utils/errors');
 const productController = require('../controllers/productController');
 const { productPutValidator } = require('../validators/productValidator');
 
-<<<<<<< HEAD
-//termék lekérdezése
-=======
 //termékek lekérdezése
->>>>>>> origin/main
 router.get("/", productController.getAllProducts)
 
 //termék módosítása
