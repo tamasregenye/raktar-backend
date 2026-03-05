@@ -11,6 +11,6 @@ const categoryPostValidator = [
 ];
 
 module.exports = {
-    categoryPutValidator: categoryPutValidator,
-    categoryPostValidator: categoryPostValidator
+    categoryPutValidator,
+    categoryPostValidator
 }
