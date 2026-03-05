@@ -29,6 +29,12 @@ const movementPutValidator = [
     }
 ];
 
+//TODO movementPostValidator
+const movementPostValidator = [
+
+];
+
 module.exports = {
-    movementPutValidator: movementPutValidator
+    movementPutValidator,
+    movementPostValidator
 }
