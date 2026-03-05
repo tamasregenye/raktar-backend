@@ -4,11 +4,11 @@ const { methodNotAllowed } = require('../utils/errors');
 const productController = require('../controllers/productController');
 const { productPutValidator } = require('../validators/productValidator');
 
-// termékek lekérdezése
-router.get("/", productController.getAllProducts);
+//termékek lekérdezése
+router.get("/", productController.getAllProducts)
 
 //termék módosítása
-router.put('/:azonosito', productPutValidator, productController.putProduct);
+router.put('/:azonosito', productPutValidator, productController.putProduct)
 
 //termék létrehozása
 //TODO
@@ -17,6 +17,8 @@ router.put('/:azonosito', productPutValidator, productController.putProduct);
 //termék törlése
 //TODO
 
-router.all(["/", "/:azonosito" ], methodNotAllowed);
+
+
+router.all(["/", "/:azonosito"], methodNotAllowed)
 
 module.exports = router;
