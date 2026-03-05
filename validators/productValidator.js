@@ -1,4 +1,5 @@
 const { param, body, validationResult } = require("express-validator");
+const { validateRequest } = require("../utils/validationHelper");
 
 const productPutValidator = [
     param('azonosito').isInt({ min: 1 }).withMessage("A termék ID-nak pozitív egész számnak kell lennie!"),
@@ -11,21 +12,8 @@ const productPutValidator = [
 
     body('darabSzam').isInt({ min: 0 }).withMessage('A darabszámnak pozitív egész számnak kell lennie!'),
 
-    (keres, valasz, next) => {
-        const error = validationResult(keres);
-
-        //hiba esetén válasz összeállítása
-        if (!error.isEmpty()) {
-            return valasz.status(400).json(
-                {
-                    "valasz": "Validációs hiba!",
-                    "hibak": error.array().map(err => ({ "mezo": err.path, "uzenet": err.msg }))
-                }
-            )
-        }
-        next();
-
-    }
+    //segédfüggvény meghívása az adatok ellenőrzésére
+    validateRequest
 ];
 
 
