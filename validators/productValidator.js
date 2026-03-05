@@ -6,7 +6,7 @@ const productPutValidator = [
 
     body('kategoriaId').isInt({ min: 1 }).withMessage("A kategória ID-nak pozitív egész számnak kell lennie!"),
 
-    body('termekNev').trim().notEmpty().withMessage('A terméknévnek szövegnek kell lennie, és kötelezően megadandó!'),
+    body('termekNev').isString().trim().notEmpty().withMessage('A terméknévnek szövegnek kell lennie, és kötelezően megadandó!'),
 
     body('ar').isFloat({ min: 0 }).withMessage('Az árnak pozitív számnak kell lennie!'),
 
