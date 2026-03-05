@@ -1,4 +1,4 @@
-const { param, body } = require("express-validator");
+const { param, body, validationResult } = require("express-validator");
 const { validateRequest } = require("../utils/validationHelper");
 
 const productPutValidator = [
@@ -12,6 +12,7 @@ const productPutValidator = [
 
     body('darabSzam').isInt({ min: 0 }).withMessage('A darabszámnak pozitív egész számnak kell lennie!'),
 
+    //segédfüggvény meghívása az adatok ellenőrzésére
     validateRequest
 ];
 
