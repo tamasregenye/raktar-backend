@@ -12,7 +12,7 @@
     "swagger-ui-express": "^5.0.1"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=test node server.js",
+    "start": "node server.js",
     "test": "cross-env NODE_ENV=test jest"
   }
 }
