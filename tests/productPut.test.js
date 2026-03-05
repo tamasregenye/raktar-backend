@@ -25,10 +25,24 @@ describe('PUT /api/termekek/:azonosito tesztelése', () => {
                 "ar": 3000,
                 "darabSzam": 10
             });
-        
+
         expect(valasz.status).toBe(400); // if(valasz.status === 400)
         expect(valasz.body.hibak.find(err => err.mezo === 'azonosito')).toBeTruthy();
     });
+
+    //4. teszteset OK
+    it('200-as státuszt kell dobnia és tényleges módosítást kell végrehajtania az adatbázisban', async () => {
+        const valasz = await request(app)
+            .put('/api/termekek/1')
+            .send({
+                "kategoriaId": 1,
+                "termekNev": "Kalapács",
+                "ar": 1,
+                "darabSzam": 1
+            });
+        expect(valasz.status).toBe(200);
+    });
+
 });
 
 
