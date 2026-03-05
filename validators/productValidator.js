@@ -28,13 +28,13 @@ const productPutValidator = [
     }
 ];
 
-module.exports = {
-    productPutValidator
-}
 
-/**
- *      //validáció
-        if (termek.ar < 0 || termek.darabSzam < 0) {
-            return valasz.status(400).json({ "valasz": "Az ár és a darabszám nem lehet negatív érték!" })
-        }
- */
+//TODO productPostValidator
+const productPostValidator = [
+
+];
+
+module.exports = {
+    productPutValidator,
+    productPostValidator
+}
