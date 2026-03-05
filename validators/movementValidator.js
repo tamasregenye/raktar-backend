@@ -1,4 +1,5 @@
-const { param, validationResult, body } = require("express-validator");
+const { param, body } = require("express-validator");
+const { validateRequest } = require("../utils/validationHelper");
 
 const movementPutValidator = [
     //ellenőrzés, hibaüzenetek összeállítása
@@ -12,21 +13,7 @@ const movementPutValidator = [
 
     body('datum').isISO8601().withMessage("A dátumnak a következő formátumban kell lennie: ÉÉÉÉ-HH-NN!"),
 
-    
-    (keres, valasz, next) => {
-        const errors = validationResult(keres);
-
-        //ha van validációs hiba
-        if (!errors.isEmpty()) {
-            return valasz.status(400).json({
-                "valasz": "Validációs hiba!",
-                "hibak": errors.array().map(err => (
-                    { "mezo": err.path, "uzenet": err.msg }
-                ))
-            })
-        }
-        next();
-    }
+    validateRequest
 ];
 
 //TODO movementPostValidator
