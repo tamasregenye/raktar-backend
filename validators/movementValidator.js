@@ -14,9 +14,20 @@ const movementPutValidator = [
     body('datum').isISO8601().withMessage("A dátumnak a következő formátumban kell lennie: ÉÉÉÉ-HH-NN!"),
 
     
-    //segédfüggvény meghívása az adatok ellenőrzése
-    validateRequest
+    (keres, valasz, next) => {
+        const errors = validationResult(keres);
 
+        //ha van validációs hiba
+        if (!errors.isEmpty()) {
+            return valasz.status(400).json({
+                "valasz": "Validációs hiba!",
+                "hibak": errors.array().map(err => (
+                    { "mezo": err.path, "uzenet": err.msg }
+                ))
+            })
+        }
+        next();
+    }
 ];
 
 //TODO movementPostValidator

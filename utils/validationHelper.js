@@ -1,6 +1,6 @@
 const { validationResult } = require("express-validator");
 
-const validateRequest =  (keres, valasz, next) => {
+const validateRequest = (keres, valasz, next) => {
     const errors = validationResult(keres);
 
     //ha van validációs hiba
