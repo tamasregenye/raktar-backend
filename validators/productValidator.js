@@ -1,5 +1,9 @@
 const { param, body, validationResult } = require("express-validator");
+<<<<<<< HEAD
 const { validateRequest } = require("../utils/validationHelp");
+=======
+const { validateRequest } = require("../utils/validationHelper");
+>>>>>>> origin/main
 
 const productPutValidator = [
     param('azonosito').isInt({ min: 1 }).withMessage("A termék ID-nak pozitív egész számnak kell lennie!"),
@@ -14,7 +18,10 @@ const productPutValidator = [
 
     //segédfüggvény meghívása az adatok ellenőrzésére
     validateRequest
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
 ];
 
 
