@@ -1,9 +1,5 @@
 const { param, validationResult, body } = require("express-validator");
-<<<<<<< HEAD
-const { validateRequest } = require("../utils/validationHelp");
-=======
 const { validateRequest } = require("../utils/validationHelper");
->>>>>>> origin/main
 
 const movementPutValidator = [
     //ellenőrzés, hibaüzenetek összeállítása
