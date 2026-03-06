@@ -8,7 +8,8 @@ const partnerRoutes = require('./routes/partnerRoutes');
 const movementRoutes = require('./routes/movementRoutes');
 const swaggerRoutes = require('./routes/swaggerRoutes');
 const { notFoundHandler, serverErrorHandler } = require('./middlewares/errorHandler');
-const corsMiddleWare = require('./middlewares/cors')
+const corsMiddleWare = require('./middlewares/cors');
+const authRoutes = require('./routes/authRoutes');
 
 //portszám 
 const port = 3000;
@@ -24,8 +25,9 @@ app.use(corsMiddleWare);
 app.use('/api/termekek', productRoutes);
 app.use('/api/kategoriak', categoryRoutes);
 app.use('/api/partnerek', partnerRoutes);
-app.use('/api/mozgasok', movementRoutes)
-app.use('/api/docs', swaggerRoutes)
+app.use('/api/mozgasok', movementRoutes);
+app.use('/api/felhasznalok', authRoutes);
+app.use('/api/docs', swaggerRoutes);
 
 //hiba kezelő köztes rétegek használata
 app.use(notFoundHandler);
