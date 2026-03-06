@@ -1,4 +1,5 @@
 const authModel = require("../models/authModel");
+const jwt = require('jsonwebtoken');
 
 const authController = {
     registerUser: (keres, valasz, next) => {
@@ -35,31 +36,44 @@ const authController = {
 
         //létezik felhasználó a megadott email címmel?
         authModel.selectUserByEmail(email, (hiba, eredmeny) => {
-            if(hiba){
+            if (hiba) {
                 return next(hiba);
             }
 
-            if(eredmeny.length === 0){
-                return valasz.status(401).json( {"valasz": "Hibás email cím vagy jelszó!"} );
+            if (eredmeny.length === 0) {
+                return valasz.status(401).json({ "valasz": "Hibás email cím vagy jelszó!" });
             }
 
             const felhasznalo = eredmeny[0];
 
             //inaktív-e a felhasználói fiók?
-            if(felhasznalo.aktiv === 0){
-                return valasz.status(403).json( {"valasz": "A fiók deaktiválva van!"} );
+            if (felhasznalo.aktiv === 0) {
+                return valasz.status(403).json({ "valasz": "A fiók deaktiválva van!" });
             }
 
             //helyes jelszó?
             //TODO titkosított jelszó ellenőrzése
             const jelszoHelyes = (password === felhasznalo.jelszo)
 
-            if(!jelszoHelyes){
-                return valasz.status(401).json( {"valasz": "Hibás email cím vagy jelszó!"} )
+            if (!jelszoHelyes) {
+                return valasz.status(401).json({ "valasz": "Hibás email cím vagy jelszó!" })
             }
+
+            //token generálás
+            const token = jwt.sign(
+                {
+                    "id": felhasznalo.id,
+                    "szerepkor": felhasznalo.szerepkor,
+                },
+                process.env.JWT_TOKEN_KEY,
+                {
+                    expiresIn: '1h'
+                }
+            );
 
             valasz.status(200).json({
                 "valasz": "Sikeres bejelentkezés",
+                "token": token,
                 "felhasznalo": {
                     "nev": felhasznalo.nev,
                     "szerepkor": felhasznalo.szerepkor
