@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 const { methodNotAllowed } = require('../utils/errors');
-const productController = require("../controllers/productController");
-const {productPutValidator} = require ("../validators/productValidator");
 
 /**
  * @swagger
@@ -44,6 +42,7 @@ const {productPutValidator} = require ("../validators/productValidator");
  *         description: Szerver hiba
  */
 router.get("/", function (keres, valasz, next) {
+    valasz.header("Access-Control-Allow-Origin", "*");
     //1. sql szkript megírása
     const sql = "SELECT id, kategoria_id AS 'kategoriaAzonosito', nev AS 'termekNev', egysegar AS 'ar', keszlet_db AS 'keszleten' FROM `termekek`";
 
@@ -107,8 +106,8 @@ router.put('/:azonosito', productPutValidator, productController.putProduct)
 //termék törlése
 //TODO
 
-router.all(["/"], function(keres, valasz){
-    methodNotAllowed(keres, valasz);
-})
+
+
+router.all(["/", "/:azonosito"], methodNotAllowed)
 
 module.exports = router;

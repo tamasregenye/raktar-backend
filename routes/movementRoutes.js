@@ -61,7 +61,7 @@ router.get("/", (keres, valasz, next)=> {
  *       200:
  *         description: "Sikeres módosítás"
  *       400:
- *         description: "Hibás kérés, Validációs hiba"
+ *         description: "Hibás kérés, validációs hiba!"
  *       404:
  *         description: "Hibás kérés, a megadott azonosítóval nem létezik rekord!"
  *       500:
