@@ -6,6 +6,7 @@ const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const partnerRoutes = require('./routes/partnerRoutes');
 const movementRoutes = require('./routes/movementRoutes');
+const authRoutes = require('./routes/authRoutes');
 const swaggerRoutes = require('./routes/swaggerRoutes');
 const { notFoundHandler, serverErrorHandler } = require('./middlewares/errorHandler');
 const corsMiddleWare = require('./middlewares/cors')
@@ -25,6 +26,7 @@ app.use('/api/termekek', productRoutes);
 app.use('/api/kategoriak', categoryRoutes);
 app.use('/api/partnerek', partnerRoutes);
 app.use('/api/mozgasok', movementRoutes);
+app.use('/api/felhasznalok', authRoutes);
 app.use('/api/docs', swaggerRoutes);
 
 //hiba kezelő köztes rétegek használata
