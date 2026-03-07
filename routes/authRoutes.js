@@ -6,11 +6,12 @@ const router = express.Router();
 
 //végpontok definiálása
 
-//TODO validálás
-router.post('/regisztracio', authRegisterUserValidator, authController.registerUser)
+
+router.post('/regisztracio', authRegisterUserValidator, authController.registerUser);
+router.post('/bejelentkezes', authController.loginUser);
 
 //hibás HTTP metódus megadása esetén 405 státusz küldése
-router.all('/regisztacio', methodNotAllowed)
+router.all('/regisztacio', methodNotAllowed);
 
 module.exports = router
 
