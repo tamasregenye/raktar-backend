@@ -25,9 +25,9 @@ app.use(corsMiddleWare);
 app.use('/api/termekek', productRoutes);
 app.use('/api/kategoriak', categoryRoutes);
 app.use('/api/partnerek', partnerRoutes);
-app.use('/api/mozgasok', movementRoutes);
-app.use('/api/felhasznalok', authRoutes);
-app.use('/api/docs', swaggerRoutes);
+app.use('/api/mozgasok', movementRoutes)
+app.use('/api/felhasznalok', authRoutes)
+app.use('/api/docs', swaggerRoutes)
 
 //hiba kezelő köztes rétegek használata
 app.use(notFoundHandler);
