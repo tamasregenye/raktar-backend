@@ -24,15 +24,32 @@ const authMiddleware = {
             
         } catch (hiba) {
             return valasz.status(403).json({
-                "ueznet" : "Érvénytelen vagy lejárt hitelesítési adatok"
+                "ueznet" : "Nincs jogosultsága erre a műveletre!"
             })
             
         }
+    
 
-        
+    },
 
+    /**
+     * 
+     * @param {string []} elvartSzerepkorok 
+     */
+
+    requireRole: (elvartSzerepkorok) => {
+        return (keres, valasz, next) => {
+            const felhasznalo = keres.felhasznalo
+            if(!felhasznalo || elvartSzerepkorok.includes(felhasznalo.szerepkor)){
+                return valasz.status(403).json({
+                    "valasz" : "Nincs jogosultsága erre a műveletre!"
+                })
+            }
+            next()
+        }
 
     }
+
 }
 
 module.exports = authMiddleware

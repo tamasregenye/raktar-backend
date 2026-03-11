@@ -14,7 +14,7 @@ router.get("/", categoryController.getAllCategories)
 
 
 //kategória létrehozása
-router.post('/', authMiddleware.verifyToken, categoryController.postCategory);
+router.post('/', authMiddleware.verifyToken, authMiddleware.requireRole(["user"]), categoryController.postCategory);
 
 router.all(["/"], methodNotAllowed);
 
