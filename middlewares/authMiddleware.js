@@ -3,7 +3,12 @@ const jwt = require('jsonwebtoken')
 const authMiddleware = {
     verifyToken: (keres, valasz, next) => {
         const auth = keres.headers['authorization']
-        const token= auth.split(" ")[1]
+        //const token= auth.split(" ")[1]
+        let token = auth
+
+        if(auth.startsWith('Bearer')){
+            token=auth.split(' ')[1]
+        }
 
         if(!token) {
             return valasz.status(401).json({
