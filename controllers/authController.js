@@ -1,14 +1,62 @@
 const authModel = require("../models/authModel");
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const authController = {
-    registerUser: (keres, valasz, next) => {
+    /**
+     * @swagger
+     *  tags:
+     *      name: Auth
+     *      description: Felhasználói regisztráció és bejelentkezés kezelése
+     */
+
+    /**
+     * @swagger
+     * /api/felhasznalok/regisztracio:
+     *  post:
+     *      tags: [Auth]
+     *      summary: Új felhasználó regisztrációja
+     *      description: Ez a végpont lehetővé teszi új felhasználó létrehozását az adatbázisban.
+     *      requestBody:
+     *          required: true
+     *          content:
+     *              application/json:
+     *                  schema:
+     *                      type: object
+     *                      properties:
+     *                          email:
+     *                              type: string
+     *                              format: email
+     *                              description: A felhasználó email címe. Kötelező mező.
+     *                          jelszo:
+     *                              type: string
+     *                              format: password
+     *                              description: A felhasználó jelszava. Kötelező mező
+     *                          szerepkor:
+     *                              type: string
+     *                              enum: [user, admin]
+     *                              description: A felhasználó szerepköre.
+     *                          nev:
+     *                              type: string
+     *                              description: A felhasználó neve. Kötelező mező.
+     *                      required:
+     *                          -   email
+     *                          -   jelszo
+     *                          -   nev                 
+     *      responses:
+     *          200:
+     *              description: Sikeres regisztráció
+     *          400:
+     *              description: A megadott email cimmel már létezik az adatbázisban.
+     *          500:
+     *              description: Szerverhiba
+     */
+    registerUser: async (keres, valasz, next) => {
         //kérés törzsében megadott adatok kinyerése, eltárolása
         const { email, jelszo, nev } = keres.body;
 
         //jelszó titkosítása
-        //TODO
-        const hashedPassword = jelszo;
+        const hashedPassword = await bcrypt.hash(jelszo, 10);
 
         //sql script futtatása a Model állományból
         authModel.insertUser(email, hashedPassword, nev, (hiba, eredmeny) => {
@@ -27,11 +75,48 @@ const authController = {
 
     },
 
+    /**
+     * @swagger
+     * /api/felhasznalok/bejelentkezes:
+     *  post:
+     *      tags: [Auth]
+     *      summary: Felhasználó bejelentkezés
+     *      description: Ez a végpont lehetővé teszi új felhasználó létrehozását az adatbázisban.
+     *      requestBody:
+     *          required: true
+     *          content:
+     *              application/json:
+     *                  schema:
+     *                      type: object
+     *                      properties:
+     *                          email:
+     *                              type: string
+     *                              format: email
+     *                              description: A felhasználó email címe. Kötelező mező.
+     *                          jelszo:
+     *                              type: string
+     *                              format: password
+     *                              description: A felhasználó jelszava. Kötelező mező
+     *                      required:
+     *                          -   email
+     *                          -   jelszo
+     *      responses:
+     *          200:
+     *              description: Sikeres bejelentkezés
+     *          400:
+     *              description: A megadott email cimmel már létezik az adatbázisban.
+     *          401:
+     *              description: Hibás email cím vagy jelszó!
+     *          403:
+     *              description: A megadott felhasználói fiók nem aktív!
+     *          500:
+     *              description: Szerverhiba
+     */
     loginUser: (keres, valasz, next) => {
         const { email, jelszo } = keres.body;
 
         //létezik felhasználó a megadott email cimmel
-        authModel.getUser(email, (hiba, eredmeny) => {
+        authModel.getUser(email, async (hiba, eredmeny) => {
             if (hiba) {
                 return next(hiba);
             }
@@ -46,8 +131,9 @@ const authController = {
             }
 
             //helyes jelszó?
-            //TODO titkosított jelszó ellenőrzése
-            const jelszoHelyes = (jelszo === felhasznalo.jelszo)
+            //titkosított jelszó ellenőrzése
+            //const jelszoHelyes = (jelszo === felhasznalo.jelszo)
+            const jelszoHelyes = await bcrypt.compare(jelszo, felhasznalo.jelszo);
 
             if (!jelszoHelyes) {
                 return valasz.status(401).json({ "valasz": "Hibás email cím vagy jelszó!" })
@@ -59,7 +145,7 @@ const authController = {
                     id: felhasznalo.id,
                     szerepkor: felhasznalo.szerepkor,
 
-                }, 
+                },
                 process.env.JWT_TOKEN_KEY,
                 {
                     expiresIn: '1h'

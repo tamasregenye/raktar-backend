@@ -16,6 +16,8 @@ const categoryController = {
      *     summary: "Az összes kategóriák lekérése"
      *     description: "Ez a végpont lehetővé teszi az összes a rendszerben (adatbázisban) tárolt összes termékkategória lekérését egy listában. A kéréshez nem szükséges paraméter vagy törzs."
      *     tags: ["Kategóriák"]
+     *     security:
+     *       - bearerAuth: []
      *     responses:
      *       200:
      *         description: "Sikeres lekérdezés. JSON tömböt ad vissza, amely a kategóriák objektumait tartalmazza (az adatbázis sémája alapján: id mint integer, és nev mint string)."
@@ -38,8 +40,9 @@ const categoryController = {
      *   post:
      *     summary: "Új kategória létrehozása."
      *     description: " Ez a végpont lehetővé teszi egy új kategória rögzítését az adatbázisban. A sikeres mentéshez kötelező megadni a kategória nevét a kérés törzsében."
-     *     tags:
-     *       - Kategóriák
+     *     tags: [Kategóriák]
+     *     security:
+     *       - bearerAuth: []
      *     requestBody:
      *       required: true
      *       content:

@@ -6,11 +6,11 @@ const { authUserRegisterValidator, authUserLoginValidator } = require('../valida
 
 //végpontok definiálása
 
-//TODO validálás
+
 router.post('/regisztracio', authUserRegisterValidator, authController.registerUser);
 router.post('/bejelentkezes', authUserLoginValidator, authController.loginUser);
 
 //hibás HTTP metódus megadása esetén 405 státusz küldése
-router.all('/regisztracio', methodNotAllowed);
+router.all(['/regisztracio', 'bejelentkezes'], methodNotAllowed);
 
 module.exports = router;
