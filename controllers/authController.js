@@ -1,16 +1,59 @@
 const authModel = require("../models/authModel");
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const authController = {
-    registerUser: (keres, valasz, next) => {
+    /**
+     * @swagger
+     * tags:
+     *   name: Auth
+     *   description: Felhasználói regisztráció és bejelentkezés kezelése
+     */
+
+    /**
+     * @swagger
+     * /api/felhasznalok/regisztracio:
+     *   post:
+     *     tags: [Auth]
+     *     summary: Felhasználói regisztráció
+     *     description: Felhasználói regisztráció
+     *     requestBody:
+     *       requried: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               email:
+     *                 type: string
+     *                 format: email
+     *                 description: A felhasználó email címe. Kötelező mező.
+     *               jelszo:
+     *                 type: string
+     *                 description: A felhasználó jelszava. Legalább 8 karakter.
+     *               nev:
+     *                 type: string
+     *                 description: A felhasználó neve. Kötelező mező
+     *             required:
+     *               - email
+     *               - jelszo
+     *               - nev           
+     *     responses:
+     *       201:
+     *         description: Sikeres regisztráció.
+     *       400:
+     *         description: A megadott email címmel már regisztráltak.
+     *       500:
+     *         description: Szerver hiba.
+     */
+    registerUser: async (keres, valasz, next) =>{
         //kérés törzsében megadott adatok kinyerése, eltárolása
         const email = keres.body.email;
         const password = keres.body.jelszo;
         const name = keres.body.nev;
 
         //jelszó titkosítása
-        //TODO
-        const hashedPassword = password;
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         //sql script futtatása a Model állományból
         authModel.insertUser(email, hashedPassword, name, (hiba, eredmeny) => {
@@ -30,12 +73,47 @@ const authController = {
 
     },
 
+    /**
+     * @swagger
+     * /api/felhasznalok/bejelentkezes:
+     *   post:
+     *     tags: [Auth]
+     *     summary: Felhasználói bejelentkezés
+     *     description: Felhasználói bejelentkezés
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               email:
+     *                 type: string
+     *                 format: email
+     *                 description: A felhasználó email címe. Kötelező mező.
+     *               jelszo:
+     *                 type: string
+     *                 description: A felhasználó jelszava. Legalább 8 karakter.
+     *     responses:
+     *       200:
+     *         description: Sikeres bejelentkezés
+     *       400:
+     *         description: A megadott email címmel már regisztráltak.
+     *       401:
+     *         description: Hibás email cím vagy jelszó!
+     *       403: 
+     *         description: A fiók deaktiválva van!
+     *       500:
+     *         description: Szerver hiba.
+     *             
+     *     
+     */
     loginUser: (keres, valasz, next) => {
         const email = keres.body.email;
         const password = keres.body.jelszo;
 
         //létezik felhasználó a megadott email címmel?
-        authModel.selectUserByEmail(email, (hiba, eredmeny) => {
+        authModel.selectUserByEmail(email, async (hiba, eredmeny) => {
             if (hiba) {
                 return next(hiba);
             }
@@ -52,8 +130,7 @@ const authController = {
             }
 
             //helyes jelszó?
-            //TODO titkosított jelszó ellenőrzése
-            const jelszoHelyes = (password === felhasznalo.jelszo)
+            const jelszoHelyes = await bcrypt.compare(password, felhasznalo.jelszo);
 
             if (!jelszoHelyes) {
                 return valasz.status(401).json({ "valasz": "Hibás email cím vagy jelszó!" })
