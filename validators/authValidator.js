@@ -11,6 +11,15 @@ const authRegisterUserValidator = [
     validateRequest
 ];
 
+//login TODO
+const authLoginValidator = [
+    body('email').isEmail().withMessage("Érvényes email cím megadása kötelező"),
+
+    body('jelszo').isLength({min: 8}).withMessage("A jelszónak legalább 8 karakter hosszúságúnak kell lennie"),
+
+    validateRequest
+]
+
 module.exports = { 
-    authRegisterUserValidator 
+    authRegisterUserValidator, authLoginValidator
 }
