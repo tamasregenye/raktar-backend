@@ -11,6 +11,6 @@ const authRegisterUserValidator = [
     validateRequest
 ];
 
-module.exports = {
-    authRegisterUserValidator
+module.exports = { 
+    authRegisterUserValidator 
 }
