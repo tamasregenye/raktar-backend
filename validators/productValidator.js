@@ -12,6 +12,7 @@ const productPutValidator = [
 
     body('darabSzam').isInt({ min: 0 }).withMessage('A darabszámnak pozitív egész számnak kell lennie!'),
 
+    //segédfüggvény meghívása az adatok ellenőrzésére
     validateRequest
 ];
 

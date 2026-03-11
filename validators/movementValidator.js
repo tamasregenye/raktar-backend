@@ -13,7 +13,7 @@ const movementPutValidator = [
 
     body('datum').isISO8601().withMessage("A dátumnak a következő formátumban kell lennie: ÉÉÉÉ-HH-NN!"),
 
-    //segédfüggvény meghívása az adatok ellenőrzéséhez
+    //segédfüggvény meghívása az adatok ellenőrzésére
     validateRequest
 ];
 

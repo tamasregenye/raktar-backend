@@ -86,7 +86,7 @@ CREATE TABLE `raktar_mozgasok` (
 --
 
 INSERT INTO `raktar_mozgasok` (`id`, `termek_id`, `partner_id`, `mennyiseg`, `datum`) VALUES
-(1, 1, 1, 1, '2026-03-05 08:30:00');
+(1, 1, 1, 1, '2026-03-05 09:15:00');
 
 -- --------------------------------------------------------
 
