@@ -11,7 +11,7 @@ router.post('/regisztracio', authRegisterUserValidator, authController.registerU
 router.post('/bejelentkezes', authController.loginUser);
 
 //hibás HTTP metódus megadása esetén 405 státusz küldése
-router.all('/regisztacio', methodNotAllowed);
+router.all(['/regisztacio', 'bejelentkezes'], methodNotAllowed);
 
 module.exports = router
 

@@ -1,8 +1,46 @@
 const authModel = require("../models/authModel");
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const authController = {
-    registerUser: (keres, valasz, next) => {
+/**
+ * @swagger
+ * /api/felhasznalok/regisztracio:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Új felhasználó létrehozása
+ *     description: Új felhasználó regisztrációja email, jelszó és név megadásával.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - jelszo
+ *               - nev
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "pelda@pelda.com"
+ *               jelszo:
+ *                 type: string
+ *                 example: "Pelda123"
+ *               nev:
+ *                 type: string
+ *                 example: "Köpjacic Imre"
+ *     responses:
+ *       201:
+ *         description: Sikeres létrehozás.
+ *       400:
+ *         description: A megadott email címmel már regisztráltak.
+ *       500:
+ *         description: Szerver- vagy adatbázis hiba. Nem sikerült a regisztráció.
+ */
+
+    registerUser: async (keres, valasz, next) => {
         //kérés törzsében megadott adatok kinyerése, eltárolása
         const email = keres.body.email;
         const password = keres.body.jelszo;
@@ -10,7 +48,7 @@ const authController = {
 
         //jelszó titkosítása
         //TODO
-        const hashedPassword = password;
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         //sql script futtatása a Model állományból
         authModel.insertUser(email, hashedPassword, name, (hiba, eredmeny) => {
@@ -30,12 +68,47 @@ const authController = {
 
     },
 
+/**
+ * 
+ * @swagger
+ * /api/felhasznalok/bejelentkezes:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Felhasználói bejelentkezés
+ *     description: Felhasználói bejelentkezés
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "pelda@pelda.com"
+ *               jelszo:
+ *                 type: string
+ *                 example: "Pelda123"
+ *     responses:
+ *       201:
+ *         description: Sikeres létrehozás.
+ *       400:
+ *         description: A megadott email címmel már regisztráltak.
+ *       401:
+ *         description: Hibás email cím vagy jelszó!
+ *       403:
+ *         description: A fiók deaktiválva van!
+ *       500:
+ *         description: Szerver- vagy adatbázis hiba.
+ */
+
     loginUser: (keres, valasz, next) => {
         const email = keres.body.email;
         const password = keres.body.jelszo;
 
         //létezik felhasználó a megadott email címmel?
-        authModel.selectUserByEmail(email, (hiba, eredmeny) => {
+        authModel.selectUserByEmail(email, async (hiba, eredmeny) => {
             if (hiba) {
                 return next(hiba);
             }
@@ -53,7 +126,8 @@ const authController = {
 
             //helyes jelszó?
             //TODO titkosított jelszó ellenőrzése
-            const jelszoHelyes = (password === felhasznalo.jelszo)
+            const jelszoHelyes = await bcrypt.compare(password, felhasznalo.jelszo);
+            //const jelszoHelyes = (password === felhasznalo.jelszo)
 
             if (!jelszoHelyes) {
                 return valasz.status(401).json({ "valasz": "Hibás email cím vagy jelszó!" })
