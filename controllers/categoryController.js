@@ -40,6 +40,8 @@ const categoryController = {
      *     description: " Ez a végpont lehetővé teszi egy új kategória rögzítését az adatbázisban. A sikeres mentéshez kötelező megadni a kategória nevét a kérés törzsében."
      *     tags:
      *       - Kategóriák
+     *     security:
+     *       - bearerAuth: []
      *     requestBody:
      *       required: true
      *       content:
