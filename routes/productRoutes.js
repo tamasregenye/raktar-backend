@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const adatbazis = require('../adatbazis');
 const { methodNotAllowed } = require('../utils/errors');
+const {productPutValidator} = require('../validators/productValidator')
+const productController = require('../controllers/productController')
 
 /**
  * @swagger
