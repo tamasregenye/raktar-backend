@@ -1,7 +1,7 @@
 const adatbazis = require("../adatbazis");
 
 const productModel = {
-    selectProducts: (callback) => {
+    selectAllProducts: (callback) => {
         const sql = "SELECT id, kategoria_id AS 'kategoriaAzonosito', nev AS 'termekNev', egysegar AS 'ar', keszlet_db AS 'keszleten' FROM `termekek`";
         adatbazis.query(sql, callback);
     },
