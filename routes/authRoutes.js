@@ -1,14 +1,17 @@
-const express = require ('express');
-const authController =require('../controllers/authController');
+const express = require('express');
+const authController = require('../controllers/authController');
 const { methodNotAllowed } = require('../utils/errors');
-const { authRegisterUserValidator } = require('../validators/authValidator');
+const { authRegisterUserValidator, authLoginValidator } = require('../validators/authValidator');
 const router = express.Router();
 
-//útvonalak definiálása 
+//végpontok definiálása
 
-//TODO validálása
-router.post('/regisztracio', authRegisterUserValidator, authController.registerUser)
+
+router.post('/regisztracio', authRegisterUserValidator, authController.registerUser);
+router.post('/bejelentkezes', authLoginValidator, authController.loginUser);
+
 //hibás HTTP metódus megadása esetén 405 státusz küldése
-router.all('/regisztracio', methodNotAllowed)
+router.all(['/regisztacio', 'bejelentkezes'], methodNotAllowed);
 
 module.exports = router
+
