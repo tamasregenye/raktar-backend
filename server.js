@@ -10,7 +10,6 @@ const authRoutes = require('./routes/authRoutes');
 const swaggerRoutes = require('./routes/swaggerRoutes');
 const { notFoundHandler, serverErrorHandler } = require('./middlewares/errorHandler');
 const corsMiddleWare = require('./middlewares/cors')
-const authRoutes = require('./routes/authRoutes');
 
 //portszám 
 const port = 3000;
