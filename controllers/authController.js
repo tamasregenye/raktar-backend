@@ -140,6 +140,8 @@ const authController = {
             const token = jwt.sign(
                 {
                     "id": felhasznalo.id,
+                    "email": felhasznalo.email,
+                    "nev": felhasznalo.nev,
                     "szerepkor": felhasznalo.szerepkor,
                 },
                 process.env.JWT_TOKEN_KEY,
@@ -152,8 +154,10 @@ const authController = {
                 "valasz": "Sikeres bejelentkezés",
                 "token": token,
                 "felhasznalo": {
+                    "id": felhasznalo.id,
+                    "email": felhasznalo.email,
                     "nev": felhasznalo.nev,
-                    "szerepkor": felhasznalo.szerepkor
+                    "szerepkor": felhasznalo.szerepkor,
                 }
             })
 
