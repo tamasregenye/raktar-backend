@@ -183,6 +183,51 @@ const authController = {
             })
 
         })
+    },
+
+    logoutUser: (keres, valasz) => {
+        // süti törlése
+        // kijelentkezéskor töröltetjük a böngészővel a refreshTokent
+
+        valasz.clearCookie('refreshToken', {
+            httpOnly: false,
+            secure: false,
+            sameSite: true,
+        });
+
+        valasz.status(200).json({ "valasz": "Sikeres kijelentkezés!" });
+    },
+
+    refreshToken: (keres, valasz) => {
+        const { refreshToken } = keres.cookies;
+
+        if (!refreshToken) {
+            return valasz.status(401).json({ "valasz": "Nincs refresh token! Új Access token nem generálható!" });
+        }
+
+        try {
+            const decodedRefreshToken = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_KEY);
+
+            //token generálás
+            const accessToken = jwt.sign(
+                {
+                    "id": decodedRefreshToken.id,
+                    "email": decodedRefreshToken.email,
+                    "nev": decodedRefreshToken.nev,
+                    "szerepkor": decodedRefreshToken.szerepkor,
+                },
+                process.env.JWT_TOKEN_KEY,
+                {
+                    expiresIn: 15
+                }
+            );
+
+            valasz.status(200).json({ "accessToken": accessToken });
+
+        }
+        catch (error) {
+            return valasz.status(403).json({ "valasz": "Érvénytelen vagy lejárt refresh token!" });
+        }
     }
 }
 
