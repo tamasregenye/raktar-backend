@@ -9,8 +9,10 @@ const { authUserRegisterValidator, authUserLoginValidator } = require('../valida
 
 router.post('/regisztracio', authUserRegisterValidator, authController.registerUser);
 router.post('/bejelentkezes', authUserLoginValidator, authController.loginUser);
+router.post('/kijelentkezes', authController.logoutUser);
+router.post('/token-frissites', authController.refreshToken);
 
 //hibás HTTP metódus megadása esetén 405 státusz küldése
-router.all(['/regisztracio', 'bejelentkezes'], methodNotAllowed);
+router.all(['/regisztracio', '/bejelentkezes', '/kijelentkezes', '/token-frissites'], methodNotAllowed);
 
 module.exports = router;

@@ -55,22 +55,15 @@ const categoryController = {
      *                 description: "Az új termékkategória neve."
      *     responses:
      *       201:
-     *         description: " A kategória sikeresen rögzítve lett"
+     *         description: " A kategória rögzítésre került!"
      *       400:
-     *         description: " Validációs hiba, ha a kategórianév nem lett elküldve a törzsben."
+     *         description: Nem adta meg a kategórianevet!
      *       500:
      *         description: " Szerver- vagy adatbázishiba"
      */
     postCategory: (keres, valasz, next) => {
         //adatok kinyerése a kérés törzséből
         const kategoriaNev = keres.body.kategoriaNev;
-
-        //adatok validálása
-        if (!kategoriaNev) {
-            return valasz.status(400).json({
-                "valasz": "Nem adta meg a kategórianevet!"
-            })
-        }
 
         categoryModel.insertCategory(kategoriaNev, (hiba, eredmeny) => {
             if (hiba) {
