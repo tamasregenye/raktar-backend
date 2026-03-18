@@ -27,7 +27,7 @@ const authMiddleware = {
      * 
      * @param {string []} elvartSzerepkorok 
      */
-    reqireRole: (elvartSzerepkorok) => {
+    requireRole: (elvartSzerepkorok) => {
         return (keres, valasz, next) => {
             const felhasznalo = keres.felhasznalo;
             if (!felhasznalo || !elvartSzerepkorok.includes(felhasznalo.szerepkor)) {
