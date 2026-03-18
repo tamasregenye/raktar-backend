@@ -5,7 +5,7 @@ const authMiddleware = {
         const auth = keres.headers['authorization'];
         let token = auth;
 
-        if(auth.startsWith('Bearer')){
+        if(auth?.startsWith('Bearer')){
             token = auth.split(' ')[1];
         }
 
