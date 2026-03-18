@@ -46,7 +46,7 @@ const authController = {
      *       500:
      *         description: Szerver hiba.
      */
-    registerUser: async (keres, valasz, next) =>{
+    registerUser: async (keres, valasz, next) => {
         //kérés törzsében megadott adatok kinyerése, eltárolása
         const email = keres.body.email;
         const password = keres.body.jelszo;
@@ -137,9 +137,11 @@ const authController = {
             }
 
             //token generálás
-            const token = jwt.sign(
+            const accessToken = jwt.sign(
                 {
                     "id": felhasznalo.id,
+                    "email": felhasznalo.email,
+                    "nev": felhasznalo.nev,
                     "szerepkor": felhasznalo.szerepkor,
                 },
                 process.env.JWT_TOKEN_KEY,
@@ -148,16 +150,85 @@ const authController = {
                 }
             );
 
-            valasz.status(200).json({
-                "valasz": "Sikeres bejelentkezés",
-                "token": token,
-                "felhasznalo": {
+            const refreshToken = jwt.sign(
+                {
+                    "id": felhasznalo.id,
+                    "email": felhasznalo.email,
                     "nev": felhasznalo.nev,
                     "szerepkor": felhasznalo.szerepkor
+                },
+                process.env.REFRESH_TOKEN_KEY,
+                {
+                    expiresIn: '7d'
+                }
+            );
+
+            valasz.cookie('refreshToken', refreshToken, {
+                httpOnly: false,
+                secure: false,
+                sameSite: true,
+                //7 nap után jár le
+                maxAge: 7 * 24 * 60 * 60 * 1000
+            })
+
+            valasz.status(200).json({
+                "valasz": "Sikeres bejelentkezés",
+                "accessToken": accessToken,
+                //"refreshToken": refreshToken,
+                "felhasznalo": {
+                    "id": felhasznalo.id,
+                    "nev": felhasznalo.nev,
+                    "szerepkor": felhasznalo.szerepkor,
+                    "email": felhasznalo.email
                 }
             })
 
         })
+    },
+
+    logoutUser: (keres, valasz) => {
+        // süti törlése
+        // kijelentkezéskor töröltetjük a böngészővel a refreshTokent
+
+        valasz.clearCookie('refreshToken',  {
+                httpOnly: false,
+                secure: false,
+                sameSite: true,
+            });
+
+        valasz.status(200).json({"valasz": "Sikeres kijelentkezés!"})
+    },
+
+    refreshToken: (keres, valasz) => {
+        const { refreshToken } = keres.cookies;
+
+        if (!refreshToken) {
+            return valasz.status(401).jon({ "valasz": "Nincs refresh token! Új Access token nem generálható!" });
+        }
+
+        try {
+            const decodedRefreshToken = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_KEY);
+
+            //token generálás
+            const accessToken = jwt.sign(
+                {
+                    "id": decodedRefreshToken.id,
+                    "email": decodedRefreshToken.email,
+                    "nev": decodedRefreshToken.nev,
+                    "szerepkor": decodedRefreshToken.szerepkor,
+                },
+                process.env.JWT_TOKEN_KEY,
+                {
+                    expiresIn: 15
+                }
+            );
+
+            valasz.status(200).json({ "accessToken": accessToken });
+
+        }
+        catch (error) {
+            return valasz.status(403).json({ "valasz": "Érvénytelen vagy lejárt refresh token!" });
+        }
     }
 }
 

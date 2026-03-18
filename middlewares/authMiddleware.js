@@ -19,7 +19,7 @@ const authMiddleware = {
             next();
         }
         catch(hiba){
-            return valasz.status(403).json({"valasz": "Nincs jogosultságod ehhez a művelethez!"});
+            return valasz.status(401).json({"valasz": "Nincs jogosultságod ehhez a művelethez!"});
         }
     },
 
