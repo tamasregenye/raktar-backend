@@ -6,14 +6,14 @@ const authMiddleware = require('../middlewares/authMiddleware');
 
 //kategóriák lekérése
 
-router.get("/", authMiddleware.verifyToken, authMiddleware.reqireRole(["user", "admin"]), categoryController.getAllCategories)
+router.get("/", authMiddleware.verifyToken, authMiddleware.reqireRole(["user"]), categoryController.getAllCategories)
 
 //kategória módosítása
 //TODO
 
 
 //kategória létrehozása
-router.post('/', authMiddleware.verifyToken, authMiddleware.reqireRole(["admin"]), categoryController.postCategory);
+router.post('/', authMiddleware.verifyToken, authMiddleware.reqireRole(["user"]), categoryController.postCategory);
 
 router.all(["/"], methodNotAllowed);
 
