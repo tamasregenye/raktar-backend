@@ -137,9 +137,11 @@ const authController = {
             }
 
             //token generálás
-            const token = jwt.sign(
+            const accessToken = jwt.sign(
                 {
                     "id": felhasznalo.id,
+                    "email": felhasznalo.email,
+                    "nev": felhasznalo.nev,
                     "szerepkor": felhasznalo.szerepkor,
                 },
                 process.env.JWT_TOKEN_KEY,
@@ -148,12 +150,27 @@ const authController = {
                 }
             );
 
+            const refreshToken = jwt.sign(
+                {
+                    "id": felhasznalo.id,
+                    "szerepkor": felhasznalo.szerepkor,
+                },
+                process.env.REFRESH_TOKEN_KEY,
+                {
+                    expiresIn: '7d'
+                }
+            );
+            
+
             valasz.status(200).json({
                 "valasz": "Sikeres bejelentkezés",
-                "token": token,
+                "accessToken": accessToken,
+                "refreshToken": refreshToken,
                 "felhasznalo": {
+                    "id": felhasznalo.id,
+                    "email": felhasznalo.email,
                     "nev": felhasznalo.nev,
-                    "szerepkor": felhasznalo.szerepkor
+                    "szerepkor": felhasznalo.szerepkor,
                 }
             })
 
