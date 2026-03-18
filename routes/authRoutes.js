@@ -10,7 +10,7 @@ const router = express.Router();
 router.post('/regisztracio', authRegisterUserValidator, authController.registerUser);
 router.post('/bejelentkezes', authLoginValidator, authController.loginUser);
 router.post('/kijelentkezes', authController.logoutUser);
-router.post('/token-frissites', authController.refreshToken);
+router.post('/token-frissites', authController.refreshToken)
 
 //hibás HTTP metódus megadása esetén 405 státusz küldése
 router.all(['/regisztacio', '/bejelentkezes', '/kijelentkezes', '/token-frissites'], methodNotAllowed);

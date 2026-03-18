@@ -155,19 +155,18 @@ const authController = {
                     "id": felhasznalo.id,
                     "email": felhasznalo.email,
                     "nev": felhasznalo.nev,
-                    "szerepkor": felhasznalo.szerepkor
+                    "szerepkor": felhasznalo.szerepkor,
                 },
                 process.env.REFRESH_TOKEN_KEY,
                 {
                     expiresIn: '7d'
                 }
             );
-
+            
             valasz.cookie('refreshToken', refreshToken, {
                 httpOnly: false,
                 secure: false,
                 sameSite: true,
-                //7 nap után jár le
                 maxAge: 7 * 24 * 60 * 60 * 1000
             })
 
@@ -177,9 +176,9 @@ const authController = {
                 //"refreshToken": refreshToken,
                 "felhasznalo": {
                     "id": felhasznalo.id,
+                    "email": felhasznalo.email,
                     "nev": felhasznalo.nev,
                     "szerepkor": felhasznalo.szerepkor,
-                    "email": felhasznalo.email
                 }
             })
 
@@ -190,20 +189,20 @@ const authController = {
         // süti törlése
         // kijelentkezéskor töröltetjük a böngészővel a refreshTokent
 
-        valasz.clearCookie('refreshToken',  {
-                httpOnly: false,
-                secure: false,
-                sameSite: true,
-            });
+        valasz.clearCookie('refreshToken', {
+            httpOnly: false,
+            secure: false,
+            sameSite: true,
+        });
 
-        valasz.status(200).json({"valasz": "Sikeres kijelentkezés!"})
+        valasz.status(200).json({ "valasz": "Sikeres kijelentkezés!" });
     },
 
     refreshToken: (keres, valasz) => {
         const { refreshToken } = keres.cookies;
 
         if (!refreshToken) {
-            return valasz.status(401).jon({ "valasz": "Nincs refresh token! Új Access token nem generálható!" });
+            return valasz.status(401).json({ "valasz": "Nincs refresh token! Új Access token nem generálható!" });
         }
 
         try {
