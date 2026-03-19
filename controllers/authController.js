@@ -40,8 +40,10 @@ const authController = {
      *               - nev           
      *     responses:
      *       201:
-     *         description: Sikeres regisztráció.
+     *         description: Sikeres regisztráció!
      *       400:
+     *         description: Validációs hiba.
+     *       409:
      *         description: A megadott email címmel már regisztráltak.
      *       500:
      *         description: Szerver hiba.
@@ -61,7 +63,7 @@ const authController = {
             if (hiba) {
                 //megadott email létezik már?
                 if (hiba.code === "ER_DUP_ENTRY") {
-                    return valasz.status(400).json({ "valasz": "A megadott email címmel már regisztráltak." });
+                    return valasz.status(409).json({ "valasz": "A megadott email címmel már regisztráltak." });
                 }
                 next(hiba);
             }
