@@ -2,6 +2,7 @@
 .idea
 
 node_modules/
+test_reports/
 
 .env
 .env.test

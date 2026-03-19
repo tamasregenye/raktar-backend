@@ -54,7 +54,7 @@ const categoryController = {
      *                 description: "Az új termékkategória neve."
      *     responses:
      *       201:
-     *         description: " A kategória sikeresen rögzítve lett"
+     *         description: " A kategória rögzítésre került!"
      *       400:
      *         description: " Validációs hiba, ha a kategórianév nem lett elküldve a törzsben."
      *       500:
