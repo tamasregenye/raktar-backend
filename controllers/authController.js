@@ -1,6 +1,7 @@
 const authModel = require("../models/authModel");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt')
+const cookie = require('cookie-parser')
 
 const authController = {
 
@@ -58,7 +59,7 @@ const authController = {
         const name = keres.body.nev;
 
         //jelszó titkosítása
-        const hashedPassword =  await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         //sql script futtatása a Model állományból
         authModel.insertUser(email, hashedPassword, name, (hiba, eredmeny) => {
@@ -122,7 +123,7 @@ const authController = {
         const password = keres.body.jelszo;
 
         //létezik felhasználó a megadott email címmel?
-        authModel.selectUserByEmail (email, async (hiba, eredmeny) => {
+        authModel.selectUserByEmail(email, async (hiba, eredmeny) => {
             if (hiba) {
                 return next(hiba);
             }
@@ -147,27 +148,100 @@ const authController = {
             }
 
             //token generálás
-            const token = jwt.sign(
+            const accessToken = jwt.sign(
                 {
                     id: felhasznalo.id,
+                    email: felhasznalo.email,
+                    nev: felhasznalo.nev,
                     szerepkor: felhasznalo.szerepkor,
+
                 },
                 process.env.JWT_TOKEN_KEY,
                 {
-                    expiresIn: '1h'
+                    expiresIn: 10
                 }
             );
 
+            //token frissítése/hosszabbítása
+            const refreshToken = jwt.sign(
+                {
+                    id: felhasznalo.id,
+                    email: felhasznalo.email,
+                    nev: felhasznalo.nev,
+                    szerepkor: felhasznalo.szerepkor,
+
+                },
+                process.env.REFRESH_TOKEN_KEY,
+                {
+                    expiresIn: '7d'
+                }
+            );
+
+            valasz.cookie('refreshToken', refreshToken, {
+                httpOnly: false,
+                secure: false,
+                sameSite: true,
+                maxAge: 7 * 24 * 60 * 60 * 1000
+            })
+
             valasz.status(200).json({
                 "valasz": "Sikeres bejelentkezés",
-                "token": token,
+                "accessToken": accessToken,
+                //"refreshToken": refreshToken,
                 "felhasznalo": {
+                    "id": felhasznalo.id,
+                    "email": felhasznalo.email,
                     "nev": felhasznalo.nev,
                     "szerepkor": felhasznalo.szerepkor
                 }
             })
 
         })
+    },
+
+    logoutUser: (keres, valasz, next) => {
+        //Sütik törlése
+        //Kijelentkezéskor törölhetjük a böngészőből a refreshTokent
+
+        valasz.clearCookie('refreshToken', {
+            httpOnly: false,
+            secure: false,
+            sameSite: true
+        })
+
+        valasz.status(200).json({ "valasz": "Sikeres bejelentkezés!" })
+    },
+
+    refreshToken: (keres, valasz) => {
+        const { refreshToken } = keres.cookies
+
+        if (!refreshToken) {
+            return valasz.status(401).json({ "valasz": "Nincs refresh token! Új Access Token nem generálható!" })
+        }
+
+        try {
+            const decodedRefreshTOken = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_KEY,)
+
+            //token generálás
+            const accessToken = jwt.sign(
+                {
+                    id: decodedRefreshTOken.id,
+                    email: decodedRefreshTOken.email,
+                    nev: decodedRefreshTOken.nev,
+                    szerepkor: decodedRefreshTOken.szerepkor,
+
+                },
+                process.env.JWT_TOKEN_KEY,
+                {
+                    expiresIn: 10
+                }
+            );
+
+            valasz.status(200).json({ accessToken: accessToken })
+        }
+        catch (error) {
+            return valasz.status(403).json({ "valasz": "Érvénytelen vagy lejárt refresh token!" })
+        }
     }
 }
 

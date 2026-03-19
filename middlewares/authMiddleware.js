@@ -23,7 +23,7 @@ const authMiddleware = {
             next()
             
         } catch (hiba) {
-            return valasz.status(403).json({
+            return valasz.status(401).json({
                 "ueznet" : "Nincs jogosultsága erre a műveletre!"
             })
             
@@ -40,7 +40,7 @@ const authMiddleware = {
     requireRole: (elvartSzerepkorok) => {
         return (keres, valasz, next) => {
             const felhasznalo = keres.felhasznalo
-            if(!felhasznalo || elvartSzerepkorok.includes(felhasznalo.szerepkor)){
+            if(!felhasznalo || !elvartSzerepkorok.includes(felhasznalo.szerepkor)){
                 return valasz.status(403).json({
                     "valasz" : "Nincs jogosultsága erre a műveletre!"
                 })
