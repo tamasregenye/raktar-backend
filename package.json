@@ -20,5 +20,11 @@
     "start-test": "cross-env NODE_ENV=test node server.js",
     "test": "cross-env NODE_ENV=test jest",
     "test:html": "cross-env NODE_ENV=test jest --reporters=default --reporters=jest-html-reporter"
+  },
+  "jest-html-reporter": {
+    "outputPath": "test_reports/report.html",
+    "pageTitle": "API Tesztelési Dokumentáció",
+    "executionTimeBadge": true,
+    "includeConsoleLog": true
   }
 }

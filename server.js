@@ -10,7 +10,7 @@ const authRoutes = require('./routes/authRoutes');
 const swaggerRoutes = require('./routes/swaggerRoutes');
 const { notFoundHandler, serverErrorHandler } = require('./middlewares/errorHandler');
 const corsMiddleWare = require('./middlewares/cors');
-const cookieParser = require('cookie-parser');
+
 
 //portszám 
 const port = 3000;
@@ -20,7 +20,8 @@ const app = express();
 app.use(express.json());
 
 //cookie parser köztes réteg használata
-app.use(cookieParser());
+const cookieParser = require('cookie-parser');
+app.use(cookieParser())
 
 //cors köztes réteg használata
 app.use(corsMiddleWare);

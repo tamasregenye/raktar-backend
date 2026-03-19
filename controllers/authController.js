@@ -1,56 +1,52 @@
 const authModel = require("../models/authModel");
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt')
-const cookie = require('cookie-parser')
+const bcrypt = require('bcrypt');
 
 const authController = {
-
     /**
      * @swagger
      * tags:
-     *    name: Auth
-     *    description: Felhasználói regisztráció és bejelentkezés kezelése
+     *   name: Auth
+     *   description: Felhasználói regisztráció és bejelentkezés kezelése
      */
 
     /**
      * @swagger
      * /api/felhasznalok/regisztracio:
-     *  post:
-     *    tags: [Auth]
-     *    summary: Új felhasználó regisztrációja
-     *    description: Ez a végpont lehetővé teszi, hogy új felhasználó jöjjön létre
-     *    requestBody:
-     *      required: true
-     *      content:
-     *          application/json:
-     *              schema:
-     *                  type: object
-     *                  properties:
-     *                      email:
-     *                          type: string
-     *                          format: email
-     *                          description: Email cím
-     *                          example: teszt@teszt.hu
-     *                      jelszo:
-     *                          type: string
-     *                          format: password
-     *                          description: Jelszó
-     *                          example: Ezegyjelszo
-     *                      nev:
-     *                          type: string
-     *                          description: Név
-     *                          example: Teszt Elek
-     *              required:
-     *                  -   email
-     *                  -   jelszo
-     *                  -   nev
-     *    responses:
-     *      201:
-     *          description: Sikeres regisztráció!
-     *      400:
-     *          description: A megadott email címmel már regisztráltak.
-     *      500:
-     *          description: Szerver hiba
+     *   post:
+     *     tags: [Auth]
+     *     summary: Felhasználói regisztráció
+     *     description: Felhasználói regisztráció
+     *     requestBody:
+     *       requried: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               email:
+     *                 type: string
+     *                 format: email
+     *                 description: A felhasználó email címe. Kötelező mező.
+     *               jelszo:
+     *                 type: string
+     *                 description: A felhasználó jelszava. Legalább 8 karakter.
+     *               nev:
+     *                 type: string
+     *                 description: A felhasználó neve. Kötelező mező
+     *             required:
+     *               - email
+     *               - jelszo
+     *               - nev           
+     *     responses:
+     *       201:
+     *         description: Sikeres regisztráció!
+     *       400:
+     *         description: Validációs hiba.
+     *       409:
+     *         description: A megadott email címmel már regisztráltak.
+     *       500:
+     *         description: Szerver hiba.
      */
     registerUser: async (keres, valasz, next) => {
         //kérés törzsében megadott adatok kinyerése, eltárolása
@@ -67,7 +63,7 @@ const authController = {
             if (hiba) {
                 //megadott email létezik már?
                 if (hiba.code === "ER_DUP_ENTRY") {
-                    return valasz.status(400).json({ "valasz": "A megadott email címmel már regisztráltak." });
+                    return valasz.status(409).json({ "valasz": "A megadott email címmel már regisztráltak." });
                 }
                 next(hiba);
             }
@@ -82,41 +78,37 @@ const authController = {
     /**
      * @swagger
      * /api/felhasznalok/bejelentkezes:
-     *  post:
-     *    tags: [Auth]
-     *    summary: Bejelentkezés
-     *    description: Ez a végpont teszi lehetővé, hogy a regisztrált felhasználó bejelentkezzen
-     *    requestBody:
-     *      required: true
-     *      content:
-     *          application/json:
-     *              schema:
-     *                  type: object
-     *                  properties:
-     *                      email:
-     *                          type: string
-     *                          format: email
-     *                          description: Email cím
-     *                          example: teszt@teszt.hu
-     *                      jelszo:
-     *                          type: string
-     *                          format: password
-     *                          description: Jelszó
-     *                          example: Ezegyjelszo
-     *              required:
-     *                  -   email
-     *                  -   jelszo
-     *    responses:
-     *      200:
-     *          description: Sikeres bejelentkezés!
-     *      400:
-     *          description: Megadott email címmel már regisztráltak.
-     *      401:
-     *          description: Hibás email cím vagy jelszó!
-     *      403:
-     *          description: A fiók deaktiválva van!
-     *      500:
-     *          description: Szerver hiba
+     *   post:
+     *     tags: [Auth]
+     *     summary: Felhasználói bejelentkezés
+     *     description: Felhasználói bejelentkezés
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               email:
+     *                 type: string
+     *                 format: email
+     *                 description: A felhasználó email címe. Kötelező mező.
+     *               jelszo:
+     *                 type: string
+     *                 description: A felhasználó jelszava. Legalább 8 karakter.
+     *     responses:
+     *       200:
+     *         description: Sikeres bejelentkezés
+     *       400:
+     *         description: A megadott email címmel már regisztráltak.
+     *       401:
+     *         description: Hibás email cím vagy jelszó!
+     *       403: 
+     *         description: A fiók deaktiválva van!
+     *       500:
+     *         description: Szerver hiba.
+     *             
+     *     
      */
     loginUser: (keres, valasz, next) => {
         const email = keres.body.email;
@@ -140,8 +132,7 @@ const authController = {
             }
 
             //helyes jelszó?
-            //TODO titkosított jelszó ellenőrzése
-            const jelszoHelyes = await bcrypt.compare(password, felhasznalo.jelszo)
+            const jelszoHelyes = await bcrypt.compare(password, felhasznalo.jelszo);
 
             if (!jelszoHelyes) {
                 return valasz.status(401).json({ "valasz": "Hibás email cím vagy jelszó!" })
@@ -150,11 +141,10 @@ const authController = {
             //token generálás
             const accessToken = jwt.sign(
                 {
-                    id: felhasznalo.id,
-                    email: felhasznalo.email,
-                    nev: felhasznalo.nev,
-                    szerepkor: felhasznalo.szerepkor,
-
+                    "id": felhasznalo.id,
+                    "email": felhasznalo.email,
+                    "nev": felhasznalo.nev,
+                    "szerepkor": felhasznalo.szerepkor,
                 },
                 process.env.JWT_TOKEN_KEY,
                 {
@@ -177,6 +167,19 @@ const authController = {
                 }
             );
 
+            const refreshToken = jwt.sign(
+                {
+                    "id": felhasznalo.id,
+                    "email": felhasznalo.email,
+                    "nev": felhasznalo.nev,
+                    "szerepkor": felhasznalo.szerepkor,
+                },
+                process.env.REFRESH_TOKEN_KEY,
+                {
+                    expiresIn: '7d'
+                }
+            );
+            
             valasz.cookie('refreshToken', refreshToken, {
                 httpOnly: false,
                 secure: false,
@@ -192,55 +195,55 @@ const authController = {
                     "id": felhasznalo.id,
                     "email": felhasznalo.email,
                     "nev": felhasznalo.nev,
-                    "szerepkor": felhasznalo.szerepkor
+                    "szerepkor": felhasznalo.szerepkor,
                 }
             })
 
         })
     },
 
-    logoutUser: (keres, valasz, next) => {
-        //Sütik törlése
-        //Kijelentkezéskor törölhetjük a böngészőből a refreshTokent
+    logoutUser: (keres, valasz) => {
+        // süti törlése
+        // kijelentkezéskor töröltetjük a böngészővel a refreshTokent
 
         valasz.clearCookie('refreshToken', {
             httpOnly: false,
             secure: false,
-            sameSite: true
-        })
+            sameSite: true,
+        });
 
-        valasz.status(200).json({ "valasz": "Sikeres bejelentkezés!" })
+        valasz.status(200).json({ "valasz": "Sikeres kijelentkezés!" });
     },
 
     refreshToken: (keres, valasz) => {
-        const { refreshToken } = keres.cookies
+        const { refreshToken } = keres.cookies;
 
         if (!refreshToken) {
-            return valasz.status(401).json({ "valasz": "Nincs refresh token! Új Access Token nem generálható!" })
+            return valasz.status(401).json({ "valasz": "Nincs refresh token! Új Access token nem generálható!" });
         }
 
         try {
-            const decodedRefreshTOken = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_KEY,)
+            const decodedRefreshToken = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_KEY);
 
             //token generálás
             const accessToken = jwt.sign(
                 {
-                    id: decodedRefreshTOken.id,
-                    email: decodedRefreshTOken.email,
-                    nev: decodedRefreshTOken.nev,
-                    szerepkor: decodedRefreshTOken.szerepkor,
-
+                    "id": decodedRefreshToken.id,
+                    "email": decodedRefreshToken.email,
+                    "nev": decodedRefreshToken.nev,
+                    "szerepkor": decodedRefreshToken.szerepkor,
                 },
                 process.env.JWT_TOKEN_KEY,
                 {
-                    expiresIn: 10
+                    expiresIn: 15
                 }
             );
 
-            valasz.status(200).json({ accessToken: accessToken })
+            valasz.status(200).json({ "accessToken": accessToken });
+
         }
         catch (error) {
-            return valasz.status(403).json({ "valasz": "Érvénytelen vagy lejárt refresh token!" })
+            return valasz.status(403).json({ "valasz": "Érvénytelen vagy lejárt refresh token!" });
         }
     }
 }
