@@ -1,0 +1,144 @@
+http://localhost/phpmyadmin/
+
+1 Alapfogalmak:
+    - Adatbázis: adatok strukturált gyűjteménye, amelyeket úgy tárolunk, hogy azok könnyen kereshetők, módosíthatók és kezelhetők legyenek.
+    - Mező: A tábla oszlopai (pl. nev, ar).
+    - Rekord: Egy konkrét sor (pl. a 1-es ID-jú gyertya minden adata).
+    - Elsődleges kulcs (Primary Key): Az id. Miért kell? Mert lehet két "Karácsonyi gyertya" nevű termékünk, de az ID-jük mindig más lesz.
+
+SQL (Structured Query Language) - strukturált lekérdezési nyelv
+
+Apache: webkiszolgáló szoftver, pl.: a localhost vagy más weboldalak megjelenésére szolgál.
+
+MYSQL: SQL-alapú relációs (struktúrált: táblák, sorok, oszlopok) adatbázis-kezelő szerver. Tárolja a táblákat, biztosítja hogy az adatok ne vesszenek el.
+
+phpMyAdmin: webes kezelőfelület. SQL kódok futtatásában segít
+
+
+----------------------------------------------------------------------
+
+https://www.w3schools.com/sql
+
+2. Lekérdezés - SELECT
+
+SELECT * FROM tablaneve;
+
+SELECT mezonev1, mezonev2 FROM tablaneve;
+
+SELECT * FROM tablaneve WHERE feltetelek;
+
+3. Hozzáadás - INSERT
+
+INSERT INTO tablaneve (mezionev1, mezonev2) VALUES (ertek1, ertek2)
+
+AUTO_INCREMENT mezőket ki kell hagyni!
+
+4. Módosítás - UPDATE
+
+UPDATE tablaneve SET ... WHERE feltetelek
+
+5. Törlés - DELETE
+
+DELETE FROM tablaneve WHERE feltetelek
+
+WHERE nagyon fontos! különben minden elvész
+
+
+6. Rendezés (ORDER BY)
+    - A lekérdezések eredménye alapértelmezetten abban a sorrendben jelenik meg, ahogy az adatok az adatbázisba bekerültek.
+
+    - ORDER BY
+    - ASC (Ascending): növekvő sorrend (számoknál 0-9, szövegeknél A-Z).
+    - DESC (Descending): csökkenő sorrend (számoknál 9-0, szövegeknél Z-A).
+    - alapértelmezetten nővekvő sorrendben lesz rendezve ha nem adod meg a sorrendet
+
+    SELECT * FROM tablanev ORDER BY mezonev [ASC | DESC]
+
+    Rendezzük a termékeket név szerint.
+    SELECT * FROM `termekek` ORDER BY `nev`;
+    Rendezzük a termékeket kategória, majd név szerint.
+    SELECT * FROM `termekek` ORDER BY `kategoria` DESC, `ar` DESC;
+
+7. Toplista és korlátozás (LIMIT)
+    - megadhatjuk, hogy a lekérdezés maximum hány sort adjon vissza
+    - pl.: Csak az első 3 versenyző adataira vagyok kívácsi
+
+    Jelenítsünk meg 1 db terméket.
+
+    Jelenítsük meg a legdrágább terméket.
+    SELECT * FROM `termekek` ORDER BY `ar` DESC LIMIT 1;
+
+    Jelenítsük meg a legdrágább élelmiszert.
+    SELECT * FROM `termekek` WHERE `kategoria`='Élelmiszer' ORDER BY `ar` DESC LIMIT 1;
+
+8. Aggregáló függvények
+    - SUM(mező): Összeadja a megadott oszlop értékeit.
+    - AVG(mező): Kiszámolja a megadott oszlop értékeinek átlagát.
+    - MIN(mező): Megkeresi a legkisebb értéket.
+    - MAX(mező): Megkeresi a legnagyobb értéket.
+    - COUNT(mező vagy ): Megszámolja a sorok számát.
+         A COUNT(*) az összes sort számolja, a COUNT(mező) csak azokat, ahol a mező értéke nem NULL.
+
+    Hány db termék adatait tároltuk?
+    Mennyibe kerül a legolcsóbb termék?
+
+9. Csoportosítás (GROUP BY)
+    - A GROUP BY segítségével a sorokat csoportokba rendezhetjük egy vagy több oszlop értékei alapján
+    - Aggregáló függvényekkel együtt használjuk általában
+
+    - először csoportosítjuk az adatokat a megadot mezők szerint, majd a csoportokon belül elvégezzük a számítást
+
+    SELECT kategoria, AVG(ar) FROM termekek GROUP BY kategoria;
+
+    Kategóriánként mennyibe kerülnek átlagosan a termékek?
+
+10. Álnevek
+    - Az álnevek segítségével ideiglenesen átnevezhetünk egy oszlopot vagy egy táblát a lekérdezés idejére.
+    - aggregáló függvények eredményének adhatunk egy olvasható nevet ( AVG(ar) helyett atlagar )
+
+    pl: SELECT nev AS 'Termék neve', ar AS 'Bruttó ár' FROM termekek;
+    SELECT COUNT(*) AS 'Összes darabszám' FROM termekek;
+
+11. Distinct
+    - A DISTINCT kulcsszó arra szolgál, hogy eltávolítsa az ismétlődéseket a lekérdezés eredményéből
+    
+    SELECT DISTINCT mezonev FROM tablanev;
+
+13. Adatbázis létrehozása
+    - minimum az adatbázis nevét meg kell adni
+    CREATE DATABASE adatbazis_neve CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
+
+14. Adatbázis törlése
+    DROP DATABASE adatbazis_neve;
+
+15. Adattípusok
+https://www.w3schools.com/sql/sql_datatypes.asp
+
+Típus	                Leírás	                        Példa
+---------------------------------------------------------------------------------------------------------------
+INT	                    Egész szám	                    id, életkor, darabszám
+DECIMAL(m,d)	        Pontos tizedes tört	            ár (pl. 10,2 -> összesen 10 jegy, amiből 2 a tizedes)
+VARCHAR(n)	            Változó hosszúságú szöveg	    név, email (max n karakter)
+TEXT	                Hosszú szöveg	                leírás, megjegyzés
+DATE / DATETIME     	Dátum és idő	                születési_idő, vásárlás_ideje
+TINYINT(1)	            Logikai érték	                0 (hamis) vagy 1 (igaz)
+
+16. Táblák létrehozása és Záradékok (Constraints)
+    A tábla létrehozásakor szabályokat (kényszereket) állíthatunk be az oszlopokra.
+        - NULL / NOT NULL: Megengedjük-e, hogy az adott mező üresen maradjon?
+        - UNIQUE: Az adott oszlopban nem szerepelhet két egyforma érték (pl. email cím).
+        - PRIMARY KEY (Elsődleges kulcs): Egyedi azonosító, nem lehet NULL és nem ismétlődhet.
+        - AUTO_INCREMENT: A szám magától növekszik minden új sornál (általában az ID-nál használjuk).
+        - DEFAULT: Alapértelmezett érték, ha a felhasználó nem ad meg semmit.
+
+    CREATE TABLE tablaneve (
+        mezonev1 tipus zaradekok,
+        mezonev2 tipus zaradekok,
+    );
+
+17. Tábla módosítása
+    - oszlop hozzáadása, módosítása, törlése utólag
+
+    ALTER TABLE tablanev ADD COLUMN mezonev;
+    ALTER TABLE tablanev MODIFY COLUMN mezonev tipus zaradekok;
+    ALTER TABLE tablanev DROP COLUMN mezonev;
