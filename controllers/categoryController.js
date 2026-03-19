@@ -64,13 +64,6 @@ const categoryController = {
         //adatok kinyerése a kérés törzséből
         const kategoriaNev = keres.body.kategoriaNev;
 
-        //adatok validálása
-        if (!kategoriaNev) {
-            return valasz.status(400).json({
-                "valasz": "Nem adta meg a kategórianevet!"
-            })
-        }
-
         categoryModel.insertCategory(kategoriaNev, (hiba, eredmeny) => {
             if (hiba) {
                 return next(hiba);

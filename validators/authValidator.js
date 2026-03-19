@@ -17,7 +17,7 @@ const authLoginValidator = [
     body('jelszo').isLength({min: 8}).withMessage("A jelszónak legalább 8 karakter hosszúnak kell lennie!"),
 
     validateRequest
-]
+];
 
 module.exports = { 
     authRegisterUserValidator,
